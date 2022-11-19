@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "219593101097",
+    "project_id": "balance-bb6d8",
+    "storage_bucket": "balance-bb6d8.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:219593101097:android:d5410897d9f9b2e9c4f138",
+        "android_client_info": {
+          "package_name": "com.example.balance"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "219593101097-lsf1stj77j58iut9qqt3m96del2larm5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAzDcSc9RBNUcV0vBVVmawhIfE7SjaI2lg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "219593101097-lsf1stj77j58iut9qqt3m96del2larm5.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
