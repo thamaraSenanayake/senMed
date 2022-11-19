@@ -106,10 +106,10 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
                                   SizedBox(
-                                    height: 100,
-                                    width: 100,
+                                    height: 60,
+                                    width: 60,
                                     child: Image.asset(
-                                      "assets/image/logo.png",
+                                      "assets/image/ecg.png",
                                     ),
                                   ),
                                   Padding(
@@ -146,10 +146,10 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
                                   SizedBox(
-                                    height: 100,
-                                    width: 100,
+                                    height: 60,
+                                    width: 60,
                                     child: Image.asset(
-                                      "assets/image/logo.png",
+                                      "assets/image/salary.png",
                                     ),
                                   ),
                                   Padding(
@@ -186,10 +186,10 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
                                   SizedBox(
-                                    height: 100,
-                                    width: 100,
+                                    height: 60,
+                                    width: 60,
                                     child: Image.asset(
-                                      "assets/image/logo.png",
+                                      "assets/image/stock.png",
                                     ),
                                   ),
                                   Padding(
@@ -226,10 +226,10 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
                                   SizedBox(
-                                    height: 100,
-                                    width: 100,
+                                    height: 60,
+                                    width: 60,
                                     child: Image.asset(
-                                      "assets/image/logo.png",
+                                      "assets/image/income.png",
                                     ),
                                   ),
                                   Padding(
@@ -266,10 +266,10 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
                                   SizedBox(
-                                    height: 100,
-                                    width: 100,
+                                    height: 60,
+                                    width: 60,
                                     child: Image.asset(
-                                      "assets/image/logo.png",
+                                      "assets/image/doctor.png",
                                     ),
                                   ),
                                   Padding(
@@ -306,10 +306,10 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
                                   SizedBox(
-                                    height: 100,
-                                    width: 100,
+                                    height: 60,
+                                    width: 60,
                                     child: Image.asset(
-                                      "assets/image/logo.png",
+                                      "assets/image/stethoscope.png",
                                     ),
                                   ),
                                   Padding(
@@ -346,10 +346,10 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
                                   SizedBox(
-                                    height: 100,
-                                    width: 100,
+                                    height: 60,
+                                    width: 60,
                                     child: Image.asset(
-                                      "assets/image/logo.png",
+                                      "assets/image/expend.png",
                                     ),
                                   ),
                                   Padding(
