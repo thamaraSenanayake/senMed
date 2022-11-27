@@ -8,9 +8,11 @@ import '../res.dart';
 class CustomTextBox extends StatefulWidget {
   final String? textBoxHint;
   final String? initText;
-  final IconData? leftIcon;
+  final Widget? leftIcon;
+  final IconData? rightIcon;
   final Function(String) onChange;
   final Function(String)? onSubmit;
+  final Function()? onEditingComplete;
   final bool obscureText;
   final TextInputType textInputType;
   final TextEditingController? textEditingController;
@@ -26,10 +28,12 @@ class CustomTextBox extends StatefulWidget {
   final String? Function(String?)? validator;
   const CustomTextBox({
     Key? key,
+    this.onEditingComplete,
     this.enable = true,
     required this.onChange,
     this.borderColor,
     this.leftIcon,
+    this.rightIcon,
     this.fontSize=15,
     this.textBoxHint,
     this.obscureText = false,
@@ -115,56 +119,66 @@ class _TextBoxState extends State<CustomTextBox> {
           children: [
 
             if(widget.leftIcon != null)
-            Padding(
-              padding: const EdgeInsets.only(right: 10),
-              child: Icon(
-                widget.leftIcon,
-                color:AppColors.thirdColor
-              ),
-            ),
+            widget.leftIcon!,
             
             Expanded(
-              child: TextField(
-                enabled: widget.enable,
-                cursorColor: Colors.black,
-                scrollPadding: EdgeInsets.all(0),
-                
-                style: GoogleFonts.nunito(
-                  color: Colors.black, 
-                  fontSize: 14,
-                  fontWeight:FontWeight.w400
-                ),
-                focusNode: widget.focusNode,
-                controller:_controller,
-                decoration: InputDecoration(
-                  
-                  counterText: "",
-                  border: InputBorder.none,
-                  hintText: widget.textBoxHint,
-                  isDense: true,
-                  hintStyle:GoogleFonts.nunito(
-                    fontSize:12, 
-                    color: Colors.grey, 
-                    fontWeight: FontWeight.w300,
-                    // height: 1.5
-                  ),
-                ),
-                maxLines: widget.textInputType == TextInputType.multiline?null:1,
-                obscureText: _obscureText,
-                keyboardType: widget.textInputType,
-                // validator: widget.validator,
-                onChanged: (value) {
-                  widget.onChange(value.trim());
-                },
-                onSubmitted: (value) {
-                  if(widget.onSubmit != null){
-                    widget.onSubmit!(value.trim());
+              child: Focus(
+                onFocusChange: (hasFocus) {
+                  if(!hasFocus){
+                    if(widget.onEditingComplete != null){
+                      widget.onEditingComplete!();
+                    }
                   }
                 },
-                maxLength: widget.maxLength,
-                // maxLengthEnforced: true,
+                child: TextField(
+                  enabled: widget.enable,
+                  cursorColor: Colors.black,
+                  scrollPadding: EdgeInsets.all(0),
+                  
+                  style: GoogleFonts.poppins(
+                    color: Colors.black, 
+                    fontSize: 14,
+                    fontWeight:FontWeight.w400
+                  ),
+                  focusNode: widget.focusNode,
+                  controller:_controller,
+                  decoration: InputDecoration(
+                    
+                    counterText: "",
+                    border: InputBorder.none,
+                    hintText: widget.textBoxHint,
+                    isDense: true,
+                    hintStyle:GoogleFonts.poppins(
+                      fontSize:13, 
+                      color: Colors.grey, 
+                      fontWeight: FontWeight.w500,
+                      // height: 1.5
+                    ),
+                  ),
+                  maxLines: widget.textInputType == TextInputType.multiline?null:1,
+                  obscureText: _obscureText,
+                  keyboardType: widget.textInputType,
+                  // validator: widget.validator,
+                  onChanged: (value) {
+                    widget.onChange(value.trim());
+                  },
+                  onSubmitted: (value) {
+                    if(widget.onSubmit != null){
+                      widget.onSubmit!(value.trim());
+                    }
+                  },
+                  maxLength: widget.maxLength,
+                  // maxLengthEnforced: true,
+                ),
               ),
             ),
+
+            if(widget.rightIcon != null)
+            Padding(
+              padding: const EdgeInsets.only(right: 10),
+              child: Icon(widget.rightIcon,
+                  color: AppColors.thirdColor),
+            ), 
 
             
             if(widget.obscureText)

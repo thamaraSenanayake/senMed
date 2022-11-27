@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'package:balance/model/stockModel.dart';
+import 'package:balance/screens/basePage.dart';
 import 'package:balance/screens/homScreen.dart';
 import 'package:balance/screens/login.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -36,9 +37,9 @@ class FirebaseProvider  extends BaseProvider {
         if (_user == null) {
           Get.offAll(() => const Login());
         } else {
-          Get.offAll(() => const Login());
+          // Get.offAll(() => const Login());
           // await getUserData(_user!);
-          // navigateToTabsPage(_user);
+          navigateToTabsPage(_user);
          
         }
       },
@@ -124,7 +125,7 @@ class FirebaseProvider  extends BaseProvider {
 
   void navigateToTabsPage(auth.User? firebaseUser) {
     if (firebaseUser != null) {
-      Get.offAll(() => const HomeScreen());
+      Get.offAll(() =>  BasePage());
     }
   }
 

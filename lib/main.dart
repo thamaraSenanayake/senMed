@@ -1,10 +1,12 @@
 import 'package:balance/screens/homScreen.dart';
+import 'package:balance/screens/splashScreen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:provider/provider.dart';
 
+import 'providers/base_provider.dart';
 import 'providers/firebase_provider.dart';
 
 Future<void> main() async {
@@ -22,16 +24,41 @@ class MyApp extends StatelessWidget {
       DeviceOrientation.portraitUp,
       DeviceOrientation.portraitDown,
     ]);
-    return ChangeNotifierProvider(
-      lazy: false,
-      create: (context) => FirebaseProvider(),
+    // return ChangeNotifierProvider(
+    //   lazy: false,
+    //   create: (context) => FirebaseProvider(),
+    //   child: GetMaterialApp(
+    //     debugShowCheckedModeBanner: false,
+    //     title: 'balance',
+    //     theme: ThemeData(
+    //       primarySwatch: Colors.blue,
+    //     ),
+    //     home:  Container(),
+    //   ),
+    // );
+    return MultiProvider(
+      providers: [
+        ListenableProvider<BaseProvider>(create: (_) => BaseProvider()),
+         ChangeNotifierProvider(
+            lazy: false,
+            create: (context) => FirebaseProvider(),
+            child: GetMaterialApp(
+              debugShowCheckedModeBanner: false,
+              title: 'Monitoring-Report-Manager',
+              theme: ThemeData(
+                primarySwatch: Colors.blue,
+              ),
+              home: const SplashScreen(),
+            ),
+         ),
+      ],
       child: GetMaterialApp(
         debugShowCheckedModeBanner: false,
-        title: 'balance',
+        title: 'Monitoring-Report-Manager',
         theme: ThemeData(
           primarySwatch: Colors.blue,
         ),
-        home:  Container(),
+        home: const SplashScreen(),
       ),
     );
   }
