@@ -77,7 +77,7 @@ class _TextBoxState extends State<CustomTextBox> {
     return Padding(
       padding: const EdgeInsets.only(top: 20),
       child: Container(
-        width: MediaQuery.of(context).size.width - 40,
+        width: widget.width,
         constraints:widget.textInputType == TextInputType.multiline? const BoxConstraints(
           minHeight:  71,
         ):BoxConstraints(

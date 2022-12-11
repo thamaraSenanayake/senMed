@@ -226,44 +226,49 @@ class _HomeScreenState extends State<HomeScreen> {
                               ],
                             ),
                           ),
-                          Container(
-                            height: 184,
-                            width: 184,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(25),
-                              color: Colors.white,
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.grey.withOpacity(0.5),
-                                  spreadRadius: 1,
-                                  blurRadius: 7,
-                                  offset: Offset(0, 0),
-                                ),
-                              ],
-                            ),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                SizedBox(
-                                  height: 60,
-                                  width: 60,
-                                  child: Image.asset(
-                                    "assets/image/doctor.png",
+                          GestureDetector(
+                            onTap: (){
+                              Provider.of<BaseProvider>(context,listen: false).setProfilePage(Pages.PrivatePractice);
+                            },
+                            child: Container(
+                              height: 184,
+                              width: 184,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(25),
+                                color: Colors.white,
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.grey.withOpacity(0.5),
+                                    spreadRadius: 1,
+                                    blurRadius: 7,
+                                    offset: Offset(0, 0),
                                   ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(top: 10),
-                                  child: Text(
-                                    "Private Practice",
-                                    style: GoogleFonts.poppins(
-                                      color: AppColors.secondColor,
-                                      fontWeight: FontWeight.w500,
-                                      fontSize: 14,
+                                ],
+                              ),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  SizedBox(
+                                    height: 60,
+                                    width: 60,
+                                    child: Image.asset(
+                                      "assets/image/doctor.png",
                                     ),
                                   ),
-                                ),
-                              ],
+                                  Padding(
+                                    padding: const EdgeInsets.only(top: 10),
+                                    child: Text(
+                                      "Private Practice",
+                                      style: GoogleFonts.poppins(
+                                        color: AppColors.secondColor,
+                                        fontWeight: FontWeight.w500,
+                                        fontSize: 14,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
                           Container(

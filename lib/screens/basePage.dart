@@ -1,4 +1,5 @@
 import 'package:balance/screens/ecgScreen.dart';
+import 'package:balance/screens/privatePractice.dart';
 import 'package:balance/screens/stockScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -58,6 +59,8 @@ class BasePage extends StatelessWidget {
                   const ECGScreen():
                   currentPage == Pages.Stock?
                   const StockScreen():
+                  currentPage == Pages.PrivatePractice?
+                  const PrivatePractice():
                   
                   
                   Container(),
@@ -103,6 +106,9 @@ class BasePage extends StatelessWidget {
     }
     else if(currentPage == Pages.Stock){
       return "Stock";
+    }
+    else if(currentPage == Pages.PrivatePractice){
+      return "Private Practice";
     }
     return "";
   }

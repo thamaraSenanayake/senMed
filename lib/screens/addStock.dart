@@ -1,18 +1,10 @@
-import 'dart:io';
-
-import 'package:balance/const.dart';
-import 'package:balance/model/stockModel.dart';
-import 'package:balance/providers/firebase_provider.dart';
-import 'package:balance/widget/dateTimePicker.dart';
 import 'package:balance/widget/dropDown.dart';
 import 'package:balance/widget/textbox.dart';
+import 'package:balance/const.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:uuid/uuid.dart';
-
 import '../res.dart';
 import '../widget/button.dart';
 import '../widget/header.dart';
@@ -45,7 +37,7 @@ class _AddStockState extends State<AddStock> {
   final TextEditingController _sellingPriceController = TextEditingController();
   final TextEditingController _additonalQtyController = TextEditingController();
 
-  bool _isAdditionalQtyDiplay = false;
+  bool _isAdditionalQtyDisplay = false;
   bool _isAdditionalPlus = true;
 
   @override
@@ -89,6 +81,7 @@ class _AddStockState extends State<AddStock> {
                           ),
                         ),
                         children: [
+                          
                           CustomTextBox(
                             focusNode: _nameFocus,
                             onChange: (val) {
@@ -106,28 +99,197 @@ class _AddStockState extends State<AddStock> {
                               _qtyFocus.requestFocus();
                             },
                           ),
-                          CustomTextBox(
-                            focusNode: _qtyFocus,
-                            onChange: (val) {
-                              if(int.tryParse(val) != null){
-                                _qty = int.parse(val);
-                                if (_qtyError.isNotEmpty) {
+
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+
+                              GestureDetector(
+                                onTap: (){
                                   setState(() {
-                                    _qtyError = "";
+                                    _isAdditionalQtyDisplay = true;
+                                    _isAdditionalPlus = false;
                                   });
-                                }
-                              }else{
-                                _qty = 0;
-                              }
-                            },
-                            errorText: _qtyError,
-                            width: _size.width - 40,
-                            textBoxHint: "Qty",
-                            textInputType: TextInputType.number,
-                            onSubmit: (val) {
-                              _sellingPriceFocus.requestFocus();
-                            },
+                                  _additonalQtyFocus.requestFocus();
+                                },
+                                child: Container(
+                                  height: 48,
+                                  width: 48,
+                                  decoration: const BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: AppColors.mainColor,
+                                    boxShadow:  [
+                                      BoxShadow(color: Color.fromRGBO(0, 0, 0, 0.15)),
+                                      BoxShadow(
+                                        color: Color.fromRGBO(0, 0, 0, 0.15),
+                                        blurRadius: 11.0,
+                                        spreadRadius: 0.0,
+                                        offset: Offset(
+                                          0.0,
+                                          3.0,
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                  child: const Icon(
+                                    Icons.remove,
+                                    color: AppColors.thirdColor,
+                                  ),
+                                ),
+                              ),
+
+                              CustomTextBox(
+                                focusNode: _qtyFocus,
+                                onChange: (val) {
+                                  if(int.tryParse(val) != null){
+                                    _qty = int.parse(val);
+                                    if (_qtyError.isNotEmpty) {
+                                      setState(() {
+                                        _qtyError = "";
+                                      });
+                                    }
+                                  }else{
+                                    _qty = 0;
+                                  }
+                                },
+                                errorText: _qtyError,
+                                width: _size.width - 150,
+                                textBoxHint: "Qty",
+                                textInputType: TextInputType.number,
+                                onSubmit: (val) {
+                                  _sellingPriceFocus.requestFocus();
+                                },
+                              ),
+
+                              GestureDetector(
+                                onTap: (){
+                                  setState(() {
+                                    _isAdditionalQtyDisplay = true;
+                                    _isAdditionalPlus = true;
+                                  });
+                                  _additonalQtyFocus.requestFocus();
+                                },
+                                child: Container(
+                                  height: 48,
+                                  width: 48,
+                                  decoration: const BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: AppColors.mainColor,
+                                    boxShadow:  [
+                                      BoxShadow(color: Color.fromRGBO(0, 0, 0, 0.15)),
+                                      BoxShadow(
+                                        color: Color.fromRGBO(0, 0, 0, 0.15),
+                                        blurRadius: 11.0,
+                                        spreadRadius: 0.0,
+                                        offset: Offset(
+                                          0.0,
+                                          3.0,
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                  child: const Icon(
+                                    Icons.add,
+                                    color: AppColors.thirdColor,
+                                  ),
+                                ),
+                              ),
+
+                            ],
                           ),
+
+                          if(_isAdditionalQtyDisplay)
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+
+                              const SizedBox(
+                                width: 48,                                
+                              ),
+
+                              SizedBox(
+                                width: 48,  
+                                height: 48,
+                                child: Center(
+                                  child: Container(
+                                    width: 30,  
+                                    height: 30,
+                                    decoration: BoxDecoration(
+                                      border: Border.all(
+                                        color: AppColors.mainColor,
+                                        width: 2
+                                      ),
+                                      shape: BoxShape.circle
+                                    ),
+                                    child:  Icon(
+                                      _isAdditionalPlus? Icons.add:Icons.remove,
+                                      color: AppColors.mainColor,
+                                    ),                              
+                                  ),
+                                ),
+                              ),
+
+                              CustomTextBox(
+                                focusNode: _additonalQtyFocus,
+                                onChange: (val) {
+                                  if(int.tryParse(val) != null){
+                                    _qty = int.parse(val);
+                                    if (_qtyError.isNotEmpty) {
+                                      setState(() {
+                                        _qtyError = "";
+                                      });
+                                    }
+                                  }else{
+                                    _qty = 0;
+                                  }
+                                },
+                                errorText: _qtyError,
+                                width: _size.width - 204,
+                                textBoxHint: _isAdditionalPlus? "Add to Qty":"Subtract from Qty",
+                                textInputType: TextInputType.number,
+                                onSubmit: (val) {
+                                  _sellingPriceFocus.requestFocus();
+                                },
+                              ),
+
+                              GestureDetector(
+                                onTap: (){
+                                  setState(() {
+                                    _isAdditionalQtyDisplay = false;
+                                  });
+                                },
+                                child: Container(
+                                  height: 48,
+                                  width: 48,
+                                  decoration: const BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: AppColors.mainColor,
+                                    boxShadow:  [
+                                      BoxShadow(color: Color.fromRGBO(0, 0, 0, 0.15)),
+                                      BoxShadow(
+                                        color: Color.fromRGBO(0, 0, 0, 0.15),
+                                        blurRadius: 11.0,
+                                        spreadRadius: 0.0,
+                                        offset: Offset(
+                                          0.0,
+                                          3.0,
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                  child: const Icon(
+                                    Icons.done,
+                                    color: AppColors.thirdColor,
+                                  ),
+                                ),
+                              ),
+
+                            ],
+                          ),
+
+
                           CustomTextBox(
                             focusNode: _sellingPriceFocus,
                             onChange: (val) {
@@ -143,7 +305,7 @@ class _AddStockState extends State<AddStock> {
                               }
                             },
                             onEditingComplete: () {
-                              // _controller.text= _amount.toStringAsFixed(2);
+                              _sellingPriceController.text= _sellingPrice.toStringAsFixed(2);
                             },
                             leftIcon: Padding(
                                 padding: const EdgeInsets.only(right: 10),
@@ -159,7 +321,7 @@ class _AddStockState extends State<AddStock> {
                             errorText: _sellingPriceError,
                             width: _size.width - 40,
                             textBoxHint: "Selling Price",
-                            // textEditingController: _controller,
+                            textEditingController: _sellingPriceController,
                             textInputType: const TextInputType.numberWithOptions(
                               decimal: true,
                             ),
@@ -167,6 +329,23 @@ class _AddStockState extends State<AddStock> {
                           Padding(
                             padding: const EdgeInsets.only(top: 20),
                             child: CustomDropDown(value: _selectedType, valueList: AppData.stockList, onChange: (val){}),
+                          ),
+                          CustomTextBox(
+                            focusNode: _waringQtyFocus,
+                            onChange: (val) {
+                              _name = val;
+                              if (_nameError.isNotEmpty) {
+                                setState(() {
+                                  _nameError = "";
+                                });
+                              }
+                            },
+                            errorText: _nameError,
+                            width: _size.width - 40,
+                            textBoxHint: "Waring Qty Limit",
+                            onSubmit: (val) {
+                              // _qtyFocus.requestFocus();
+                            },
                           ),
                           Padding(
                             padding: const EdgeInsets.only(top: 30),

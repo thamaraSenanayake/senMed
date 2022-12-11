@@ -218,7 +218,7 @@ class _LoginState extends State<Login> {
                             child: Stack(children: [
                               Text(
                                 "Senanayake",
-                                style: GoogleFonts.nunito(
+                                style: GoogleFonts.poppins(
                                     color: AppColors.secondColor,
                                     fontSize: 30,
                                     fontWeight: FontWeight.w600),
@@ -227,7 +227,7 @@ class _LoginState extends State<Login> {
                                 padding: const EdgeInsets.only(top: 30),
                                 child: Text(
                                   "Medicals",
-                                  style: GoogleFonts.nunito(
+                                  style: GoogleFonts.poppins(
                                       color: AppColors.secondColor,
                                       fontSize: 20,
                                       fontWeight: FontWeight.w400),

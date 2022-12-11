@@ -5,7 +5,8 @@ class CustomDropDown extends StatefulWidget {
   final String value;
   final List<String> valueList;
   final Function(String) onChange;
-  const CustomDropDown({Key? key, required this.value, required this.valueList, required this.onChange}) : super(key: key);
+  final double? width;
+  const CustomDropDown({Key? key,this.width, required this.value, required this.valueList, required this.onChange}) : super(key: key);
 
     @override
   State<CustomDropDown> createState() => _CustomDropDownState();
@@ -23,7 +24,7 @@ class _CustomDropDownState extends State<CustomDropDown> {
   Widget build(BuildContext context) {
     Size _size = MediaQuery.of(context).size;
     return Container(
-      width: _size.width,
+      width: widget.width??_size.width,
       height: 45,
       padding:const EdgeInsets.only(
         left:20,
