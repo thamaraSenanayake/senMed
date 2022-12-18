@@ -167,13 +167,13 @@ class FirebaseProvider  extends BaseProvider {
 
   
 
-  // signOut() async {
-  //   _user = null;
-  //   name = null;
-  //   user = null;
-  //   _auth.signOut();
-    // Get.offAll(() => const LoginScreen());
-  // }
+  signOut() async {
+    _user = null;
+    name = null;
+    // user = null;
+    _auth.signOut();
+    Get.offAll(() => const Login());
+  }
 
   
 

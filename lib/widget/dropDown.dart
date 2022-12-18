@@ -2,18 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class CustomDropDown extends StatefulWidget {
-  final String value;
+  final String? value;
   final List<String> valueList;
   final Function(String) onChange;
   final double? width;
-  const CustomDropDown({Key? key,this.width, required this.value, required this.valueList, required this.onChange}) : super(key: key);
+  final String? hint;
+  const CustomDropDown({Key? key,this.hint, this.width, required this.value, required this.valueList, required this.onChange}) : super(key: key);
 
     @override
   State<CustomDropDown> createState() => _CustomDropDownState();
 }
 
 class _CustomDropDownState extends State<CustomDropDown> {
-  late String _selectItem;
+  String? _selectItem;
 
   @override
   void initState() {
@@ -57,6 +58,14 @@ class _CustomDropDownState extends State<CustomDropDown> {
               _selectItem = newValue;
             });
           },
+          hint: widget.hint!= null?Text(
+                widget.hint!,
+                style: GoogleFonts.poppins(
+                  fontWeight: FontWeight.w400,
+                  fontSize: 15,
+                  color: const Color(0xff777777)
+                ),
+              ):null,
           items: widget.valueList.map<DropdownMenuItem<String>>((String value) {
             return DropdownMenuItem<String>(
               value: value,

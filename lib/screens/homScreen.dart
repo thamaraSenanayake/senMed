@@ -1,13 +1,7 @@
-import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
-import 'package:animations/animations.dart';
 import 'package:balance/res.dart';
-import 'package:balance/screens/addStock.dart';
-import 'package:balance/widget/header.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
-
 import '../const.dart';
 import '../providers/base_provider.dart';
 
@@ -271,44 +265,49 @@ class _HomeScreenState extends State<HomeScreen> {
                               ),
                             ),
                           ),
-                          Container(
-                            height: 184,
-                            width: 184,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(25),
-                              color: Colors.white,
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.grey.withOpacity(0.5),
-                                  spreadRadius: 1,
-                                  blurRadius: 7,
-                                  offset: Offset(0, 0),
-                                ),
-                              ],
-                            ),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                SizedBox(
-                                  height: 60,
-                                  width: 60,
-                                  child: Image.asset(
-                                    "assets/image/stethoscope.png",
+                          GestureDetector(
+                            onTap: (){
+                              Provider.of<BaseProvider>(context,listen: false).setProfilePage(Pages.Channeling);
+                            },
+                            child: Container(
+                              height: 184,
+                              width: 184,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(25),
+                                color: Colors.white,
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.grey.withOpacity(0.5),
+                                    spreadRadius: 1,
+                                    blurRadius: 7,
+                                    offset: Offset(0, 0),
                                   ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(top: 10),
-                                  child: Text(
-                                    "Channeling",
-                                    style: GoogleFonts.poppins(
-                                      color: AppColors.secondColor,
-                                      fontWeight: FontWeight.w500,
-                                      fontSize: 14,
+                                ],
+                              ),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  SizedBox(
+                                    height: 60,
+                                    width: 60,
+                                    child: Image.asset(
+                                      "assets/image/stethoscope.png",
                                     ),
                                   ),
-                                ),
-                              ],
+                                  Padding(
+                                    padding: const EdgeInsets.only(top: 10),
+                                    child: Text(
+                                      "Channeling",
+                                      style: GoogleFonts.poppins(
+                                        color: AppColors.secondColor,
+                                        fontWeight: FontWeight.w500,
+                                        fontSize: 14,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
                           Container(

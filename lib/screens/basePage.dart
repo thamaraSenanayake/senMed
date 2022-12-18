@@ -1,6 +1,8 @@
+import 'package:balance/screens/Channeling/channeling.dart';
+import 'package:balance/screens/Channeling/channlingDetails.dart';
 import 'package:balance/screens/ecgScreen.dart';
 import 'package:balance/screens/privatePractice.dart';
-import 'package:balance/screens/stockScreen.dart';
+import 'package:balance/screens/stock/stockScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
@@ -10,6 +12,7 @@ import 'package:provider/provider.dart';
 import '../const.dart';
 import '../providers/base_provider.dart';
 import '../res.dart';
+import '../widget/drawer.dart';
 import '../widget/header.dart';
 import 'homScreen.dart';
 
@@ -37,7 +40,7 @@ class BasePage extends StatelessWidget {
           child: Drawer(
             elevation: 50,
             child: ListView(
-              // children: appDrawerContent(_scaffoldKey,context),
+              children: appDrawerContent(_scaffoldKey,context),
             ),
           ),
         ),
@@ -61,6 +64,10 @@ class BasePage extends StatelessWidget {
                   const StockScreen():
                   currentPage == Pages.PrivatePractice?
                   const PrivatePractice():
+                  currentPage == Pages.Channeling?
+                  const ChannelingList():
+                  currentPage == Pages.ChannelingDetails?
+                  const ChannelingDetails():
                   
                   
                   Container(),
@@ -71,7 +78,14 @@ class BasePage extends StatelessWidget {
               child: Header(
                 title: _setPageTitle(currentPage),
                 leftClick: (){
-                  Provider.of<BaseProvider>(context,listen: false).setProfilePage(Pages.HomePage);
+                  if(currentPage == Pages.HomePage){
+                    _scaffoldKey.currentState!.openDrawer();
+                  }
+                  if(currentPage == Pages.ChannelingDetails){
+                    Provider.of<BaseProvider>(context,listen: false).setProfilePage(Pages.Channeling);
+                  }else{
+                    Provider.of<BaseProvider>(context,listen: false).setProfilePage(Pages.HomePage);
+                  }
                 },
                 leftIcon: _setLeftIcon(currentPage),
                 rightIconText:_setRightButton(currentPage),
@@ -110,12 +124,24 @@ class BasePage extends StatelessWidget {
     else if(currentPage == Pages.PrivatePractice){
       return "Private Practice";
     }
+    else if(currentPage == Pages.Channeling){
+      return "Channeling";
+    }
+    else if(currentPage == Pages.ChannelingDetails){
+      return "Doctors Name";
+    }
     return "";
   }
 
   String? _setRightButton(Pages currentPage){
     if(currentPage == Pages.ECG){
       return "History";
+    }
+    if(currentPage == Pages.PrivatePractice){
+      return "History";
+    }
+    if(currentPage == Pages.ChannelingDetails){
+      return "Cancel";
     }
     return "";
   }

@@ -1,4 +1,5 @@
 enum Pages{
+  Settings,
   HomePage,
   ECG,
   ECGHistory,
@@ -7,6 +8,7 @@ enum Pages{
   Income,
   PrivatePractice,
   Channeling,
+  ChannelingDetails,
   OtherExpends,
 }
 

@@ -2,7 +2,7 @@ import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.da
 import 'package:animations/animations.dart';
 import 'package:balance/model/ecgModel.dart';
 import 'package:balance/res.dart';
-import 'package:balance/screens/addStock.dart';
+import 'package:balance/screens/stock/addStock.dart';
 import 'package:balance/widget/button.dart';
 import 'package:balance/widget/header.dart';
 import 'package:balance/widget/textbox.dart';

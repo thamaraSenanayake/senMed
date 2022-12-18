@@ -2,7 +2,7 @@ import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.da
 import 'package:animations/animations.dart';
 import 'package:balance/model/ecgModel.dart';
 import 'package:balance/res.dart';
-import 'package:balance/screens/addStock.dart';
+import 'package:balance/screens/stock/addStock.dart';
 import 'package:balance/widget/button.dart';
 import 'package:balance/widget/header.dart';
 import 'package:balance/widget/textbox.dart';
@@ -11,8 +11,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import '../const.dart';
-import '../widget/dropDown.dart';
+import '../../const.dart';
+import '../../widget/dropDown.dart';
 
 class StockScreen extends StatefulWidget {
   const StockScreen({Key? key}) : super(key: key);
@@ -241,32 +241,6 @@ class _StockScreenState extends State<StockScreen> {
                   );
                 },
               ),
-              // child: Container(
-              //   height: 70,
-              //   width: 70,
-              //   decoration: const BoxDecoration(
-              //     color: AppColors.mainColor,
-              //     shape: BoxShape.circle,
-              //     boxShadow:  [
-              //       BoxShadow(color: Color.fromRGBO(0, 0, 0, 0.15)),
-              //       BoxShadow(
-              //         color: Color.fromRGBO(0, 0, 0, 0.15),
-              //         blurRadius: 11.0,
-              //         spreadRadius: 0.0,
-              //         offset: Offset(
-              //           0.0,
-              //           3.0,
-              //         ),
-              //       )
-              //     ],
-              //   ),
-              //   child: const Center(
-              //     child: Icon(
-              //       Icons.add,
-              //       color: Colors.white,
-              //     ),
-              //   ),
-              // ),
             )
           ),
         )

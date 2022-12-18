@@ -5,9 +5,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../res.dart';
-import '../widget/button.dart';
-import '../widget/header.dart';
+import '../../res.dart';
+import '../../widget/button.dart';
+import '../../widget/header.dart';
 
 class AddStock extends StatefulWidget {
   const AddStock({Key? key}) : super(key: key);
