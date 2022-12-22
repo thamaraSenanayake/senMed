@@ -3,7 +3,6 @@ import 'dart:ui';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
 
 class AppColors {
   static const Color mainColor = Color(0xff06283D);
@@ -38,22 +37,22 @@ DateTime? getFirebaseTime(val) {
   return dateTime!;
 }
 
-Future<File?> getImage(bool isCamera, BuildContext context) async {
-  XFile? image;
-  final picker = ImagePicker();
+// Future<File?> getImage(bool isCamera, BuildContext context) async {
+//   XFile? image;
+//   final picker = ImagePicker();
 
-  if (isCamera) {
-    image = await picker.pickImage(source: ImageSource.camera);
-  } else {
-    image = await picker.pickImage(source: ImageSource.gallery);
-  }
+//   if (isCamera) {
+//     image = await picker.pickImage(source: ImageSource.camera);
+//   } else {
+//     image = await picker.pickImage(source: ImageSource.gallery);
+//   }
 
-  if (image != null) {
-    return File(image.path);
-  } else {
-    return null;
-  }
-}
+//   if (image != null) {
+//     return File(image.path);
+//   } else {
+//     return null;
+//   }
+// }
 
 Future<void> selectDate(BuildContext context, DateTime _dateTime, Function(DateTime) setDateTime) async {
   final DateTime? picked = await showDatePicker(

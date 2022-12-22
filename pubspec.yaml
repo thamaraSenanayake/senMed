@@ -42,16 +42,16 @@ dependencies:
   firebase_storage: ^10.2.6
   uuid: ^3.0.6
   android_path_provider: ^0.3.0
-  image_picker: ^0.8.4+11
+  # image_picker: ^0.8.4+11
   intl: ^0.17.0
-  pdf: ^3.8.0
+  # pdf: ^3.8.0
   http: ^0.13.4
   flutter_keyboard_visibility: ^5.2.0
   flutter_staggered_animations: ^1.0.0
   flutter_svg: ^1.0.3
   google_fonts: ^2.3.2
   flutter_spinkit: ^5.1.0
-  animated_bottom_navigation_bar: ^0.3.3
+  # animated_bottom_navigation_bar: ^0.3.3
   animations: ^2.0.2
   flutter_typeahead: ^4.1.1
 

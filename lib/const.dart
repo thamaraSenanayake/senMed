@@ -10,6 +10,9 @@ enum Pages{
   Channeling,
   ChannelingDetails,
   OtherExpends,
+  VisitingDoctors,
+  DefaultValues,
+  ChannelingExtraItems
 }
 
 class AppData{

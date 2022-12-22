@@ -2,7 +2,9 @@ import 'package:balance/screens/Channeling/channeling.dart';
 import 'package:balance/screens/Channeling/channlingDetails.dart';
 import 'package:balance/screens/ecgScreen.dart';
 import 'package:balance/screens/privatePractice.dart';
+import 'package:balance/screens/settings.dart';
 import 'package:balance/screens/stock/stockScreen.dart';
+import 'package:balance/screens/vistiingDoctors/doctorScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
@@ -15,6 +17,7 @@ import '../res.dart';
 import '../widget/drawer.dart';
 import '../widget/header.dart';
 import 'homScreen.dart';
+import 'vistiingDoctors/addDoctor.dart';
 
 
 class BasePage extends StatelessWidget {
@@ -68,6 +71,10 @@ class BasePage extends StatelessWidget {
                   const ChannelingList():
                   currentPage == Pages.ChannelingDetails?
                   const ChannelingDetails():
+                  currentPage == Pages.Settings?
+                  const SettingsScreen():
+                  currentPage == Pages.VisitingDoctors?
+                  const DoctorScreen():
                   
                   
                   Container(),
@@ -81,7 +88,10 @@ class BasePage extends StatelessWidget {
                   if(currentPage == Pages.HomePage){
                     _scaffoldKey.currentState!.openDrawer();
                   }
-                  if(currentPage == Pages.ChannelingDetails){
+                  else if(currentPage == Pages.VisitingDoctors){
+                    Provider.of<BaseProvider>(context,listen: false).setProfilePage(Pages.Settings);
+                  }
+                  else if(currentPage == Pages.ChannelingDetails){
                     Provider.of<BaseProvider>(context,listen: false).setProfilePage(Pages.Channeling);
                   }else{
                     Provider.of<BaseProvider>(context,listen: false).setProfilePage(Pages.HomePage);
@@ -129,6 +139,12 @@ class BasePage extends StatelessWidget {
     }
     else if(currentPage == Pages.ChannelingDetails){
       return "Doctors Name";
+    }
+    else if(currentPage == Pages.Settings){
+      return "Settings";
+    }
+    else if(currentPage == Pages.VisitingDoctors){
+      return "Visiting Doctors";
     }
     return "";
   }

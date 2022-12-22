@@ -1,4 +1,3 @@
-import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
 import 'package:animations/animations.dart';
 import 'package:balance/const.dart';
 import 'package:balance/model/ecgModel.dart';
