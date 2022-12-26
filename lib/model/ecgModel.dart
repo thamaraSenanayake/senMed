@@ -2,23 +2,25 @@ import 'package:balance/res.dart';
 import 'package:uuid/uuid.dart';
 
 class ECGModel{
-  String id;
+  String? id;
   String name;
   String age;
   int amount;
+  String? incomeId;
   DateTime dateTime;
 
-  ECGModel({required this.id, required this.dateTime,required this.name, required this.age, required this.amount,});
+  ECGModel({ this.incomeId, this.id, required this.dateTime,required this.name, required this.age, required this.amount,});
 
 
   Map<String, dynamic> toMap() {
-    String _id=  Uuid().v4();
+    
     return {
-      "id":_id,
+      "id":id,
       "name":name,
       "age":age,
       "amount":amount,
       "dateTime":dateTime,
+      "incomeId":incomeId,
     };
   }
 
@@ -26,6 +28,7 @@ class ECGModel{
     
     return ECGModel(
       name:map["name"],
+      incomeId:map["incomeId"],
       id:map["id"],
       age:map["age"],
       amount:map["amount"],

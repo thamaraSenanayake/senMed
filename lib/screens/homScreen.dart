@@ -18,11 +18,11 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    _initSate();
+    WidgetsBinding.instance.addPostFrameCallback((_){
+      Provider.of<BaseProvider>(context,listen: false).setLoadingState(false);
+    });
   }
-  _initSate() async {
-
-  }
+  
   @override
   Widget build(BuildContext context) {
     Size _size  = MediaQuery.of(context).size;
@@ -61,7 +61,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       
                       BasePageElement(image: "assets/image/stethoscope.png", title: "Channeling", onTap: (){Provider.of<BaseProvider>(context,listen: false).setProfilePage(Pages.Channeling);}),
                       
-                      BasePageElement(image: "assets/image/expend.png", title: "Other Expends", onTap: (){Provider.of<BaseProvider>(context,listen: false).setProfilePage(Pages.Channeling);}),
+                      BasePageElement(image: "assets/image/expend.png", title: "Other Expends", onTap: (){Provider.of<BaseProvider>(context,listen: false).setProfilePage(Pages.OtherExpends);}),
                       
                     ],
                   ),

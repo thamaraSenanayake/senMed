@@ -1,10 +1,13 @@
 import 'package:balance/screens/Channeling/channeling.dart';
 import 'package:balance/screens/Channeling/channlingDetails.dart';
-import 'package:balance/screens/ecgScreen.dart';
+import 'package:balance/screens/ecg/ecgHistory.dart';
+import 'package:balance/screens/ecg/ecgScreen.dart';
+import 'package:balance/screens/otherExpends/extraItemList.dart';
 import 'package:balance/screens/privatePractice.dart';
 import 'package:balance/screens/settings.dart';
 import 'package:balance/screens/stock/stockScreen.dart';
 import 'package:balance/screens/vistiingDoctors/doctorScreen.dart';
+import 'package:balance/widget/otherExpendsWidget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
@@ -16,6 +19,8 @@ import '../providers/base_provider.dart';
 import '../res.dart';
 import '../widget/drawer.dart';
 import '../widget/header.dart';
+import 'ExtraItems/extraItemList.dart';
+import 'addDefultValues.dart';
 import 'homScreen.dart';
 import 'vistiingDoctors/addDoctor.dart';
 
@@ -28,9 +33,7 @@ class BasePage extends StatelessWidget {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     final Pages currentPage = Provider.of<BaseProvider>(context).currentPage;
-    // final Widget? reportWidget = Provider.of<BaseProvider>(context).reportWidget;
-    // final String pageTitle = Provider.of<BaseProvider>(context).pageTitle;
-    // final ButtonClick? bottomBarButton = Provider.of<BaseProvider>(context).click;
+    
     return WillPopScope(
       onWillPop: ()async => await _backClick(currentPage,context,isAndroidBackButton: true),
       child: Scaffold(
@@ -75,6 +78,14 @@ class BasePage extends StatelessWidget {
                   const SettingsScreen():
                   currentPage == Pages.VisitingDoctors?
                   const DoctorScreen():
+                  currentPage == Pages.DefaultValues?
+                  const AddDefault():
+                  currentPage == Pages.ChannelingExtraItems?
+                  const ExtraItemList():
+                  currentPage == Pages.OtherExpends?
+                  const OtherExpendsList():
+                  currentPage == Pages.ECGHistory?
+                  const ECGHistory():
                   
                   
                   Container(),
@@ -88,7 +99,10 @@ class BasePage extends StatelessWidget {
                   if(currentPage == Pages.HomePage){
                     _scaffoldKey.currentState!.openDrawer();
                   }
-                  else if(currentPage == Pages.VisitingDoctors){
+                  else if(currentPage == Pages.ECGHistory){
+                    Provider.of<BaseProvider>(context,listen: false).setProfilePage(Pages.ECG);
+                  }
+                  else if(currentPage == Pages.VisitingDoctors || currentPage == Pages.DefaultValues){
                     Provider.of<BaseProvider>(context,listen: false).setProfilePage(Pages.Settings);
                   }
                   else if(currentPage == Pages.ChannelingDetails){
@@ -128,6 +142,9 @@ class BasePage extends StatelessWidget {
     else if(currentPage == Pages.ECG){
       return "ECG";
     }
+    else if(currentPage == Pages.ECGHistory){
+      return "ECG History";
+    }
     else if(currentPage == Pages.Stock){
       return "Stock";
     }
@@ -146,6 +163,15 @@ class BasePage extends StatelessWidget {
     else if(currentPage == Pages.VisitingDoctors){
       return "Visiting Doctors";
     }
+    else if(currentPage == Pages.DefaultValues){
+      return "Default Values";
+    }
+    else if(currentPage == Pages.ChannelingExtraItems){
+      return "Channeling Features";
+    }
+    else if(currentPage == Pages.OtherExpends){
+      return "Other Expends";
+    }
     return "";
   }
 
@@ -157,7 +183,7 @@ class BasePage extends StatelessWidget {
       return "History";
     }
     if(currentPage == Pages.ChannelingDetails){
-      return "Cancel";
+      return "Done";
     }
     return "";
   }

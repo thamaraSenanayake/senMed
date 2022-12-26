@@ -5,6 +5,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
+import '../providers/base_provider.dart';
 import '../providers/firebase_provider.dart';
 import '../res.dart';
 import '../widget/button.dart';
@@ -24,7 +25,6 @@ class _LoginState extends State<Login> {
   String _password = "";
   String _passwordError = "";
   String _dbError = "";
-  bool _loading = false;
   var keyboardVisibilityController = KeyboardVisibilityController();
   bool _keyBoardVisible = false;
 
@@ -49,13 +49,9 @@ class _LoginState extends State<Login> {
       _validation = false;
     }
     if (_validation) {
-      setState(() {
-        _loading = true;
-      });
+      Provider.of<BaseProvider>(context,listen: false).setLoadingState(true);
       String? res = await provider.signIn(email: _email, password: _password);
-      setState(() {
-        _loading = false;
-      });
+      Provider.of<BaseProvider>(context,listen: false).setLoadingState(false);
       if (res != null) {
         setState(() {
           _dbError = res;
@@ -67,6 +63,9 @@ class _LoginState extends State<Login> {
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_){
+      Provider.of<BaseProvider>(context,listen: false).setLoadingState(false);
+    });
     keyboardVisibilityController.onChange.listen((bool visible) {
       setState(() {
         _keyBoardVisible = visible;
@@ -275,7 +274,7 @@ class _LoginState extends State<Login> {
                   )
                 : const SizedBox(),
             // const Header(title: "Login"),
-            Loader(loading: _loading),
+            Loader(),
           ],
         ),
       );

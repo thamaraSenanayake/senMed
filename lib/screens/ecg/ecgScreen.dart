@@ -1,14 +1,20 @@
 import 'package:animations/animations.dart';
+import 'package:balance/const.dart';
 import 'package:balance/model/ecgModel.dart';
+import 'package:balance/providers/firebase_provider.dart';
 import 'package:balance/res.dart';
 import 'package:balance/screens/stock/addStock.dart';
 import 'package:balance/widget/button.dart';
 import 'package:balance/widget/header.dart';
+import 'package:balance/widget/loader.dart';
 import 'package:balance/widget/textbox.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
+
+import '../../providers/base_provider.dart';
 
 class ECGScreen extends StatefulWidget {
   const ECGScreen({Key? key}) : super(key: key);
@@ -21,13 +27,11 @@ class _EcgScreenState extends State<ECGScreen> {
   String _id="";
   String _name="";
   String _age="";
-  late int _amount;
-  DateTime? _dateTime;
+  int _amount =0;
   String _idError = "";
   String _nameError = "";
   String _ageError = "";
   String _amountError = "";
-  String _dateTimeError = "";
   final FocusNode _nameFocus = FocusNode();
   final FocusNode _ageFocus = FocusNode();
   final FocusNode _amountFocus = FocusNode();
@@ -40,10 +44,33 @@ class _EcgScreenState extends State<ECGScreen> {
     WidgetsBinding.instance.addPostFrameCallback((_){
       _nameFocus.requestFocus();
     });
-    _initSate();
+    
   }
 
-  _initSate() async {}
+  _done() async {
+    bool _validation = true;
+    if(_name.isEmpty){
+      _nameError = "Required Field";
+      _validation = false;
+    }
+    if(_age.isEmpty){
+      _ageError = "Required Field";
+      _validation = false;
+    }
+    if( _amount ==0){
+      _amountError = "Required Field";
+      _validation = false;
+    }
+
+    if(_validation){
+      Provider.of<BaseProvider>(context,listen: false).setLoadingState(true);
+      if( await Provider.of<FirebaseProvider>(context,listen: false).addEcgData(ECGModel( dateTime: DateTime.now(), name: _name, age: _age, amount: _amount))){
+        Provider.of<BaseProvider>(context,listen: false).setProfilePage(Pages.HomePage);
+      }
+      Provider.of<BaseProvider>(context,listen: false).setLoadingState(false);
+    }
+
+  }
   @override
   Widget build(BuildContext context) {
     Size _size = MediaQuery.of(context).size;
@@ -150,7 +177,7 @@ class _EcgScreenState extends State<ECGScreen> {
 
                       Padding(
                         padding: const EdgeInsets.only(top: 30),
-                        child: CustomButton(title: "Done", onPress: (){}),
+                        child: CustomButton(title: "Done", onPress: (){_done();}),
                       )
                     ],
                   ),
@@ -160,6 +187,7 @@ class _EcgScreenState extends State<ECGScreen> {
           ),
         ),
         ),
+        Loader(),
       ],
     );
   }

@@ -317,7 +317,7 @@ class _AddStockState extends State<AddStock> {
                                     fontWeight: FontWeight.w500,
                                     // height: 1.5
                                   ),
-                                )),
+                                ),),
                             errorText: _sellingPriceError,
                             width: _size.width - 40,
                             textBoxHint: "Selling Price",

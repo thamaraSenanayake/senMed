@@ -4,6 +4,7 @@ import 'package:uuid/uuid.dart';
 
 class PPModel{
   String id;
+  String? incomeId;
   String name;
   String age;
   List<Prescription> prescriptionList;
@@ -11,9 +12,10 @@ class PPModel{
   int dressing;
   int otherExpends;
   int doctorsCharge;
+  int medicineCharge;
   DateTime dateTime;
 
-  PPModel({required this.bp,required this.dressing, required this.otherExpends, required this.doctorsCharge, required this.id, required this.dateTime,required this.name, required this.age, required this.prescriptionList});
+  PPModel({this.incomeId, required this.medicineCharge,required this.bp,required this.dressing, required this.otherExpends, required this.doctorsCharge, required this.id, required this.dateTime,required this.name, required this.age, required this.prescriptionList});
 
 
   Map<String, dynamic> toMap() {
@@ -25,6 +27,7 @@ class PPModel{
     return {
       "id":_id,
       "name":name,
+      "incomeId":incomeId,
       "age":age,
       "prescriptionList":_prescriptionList,
       "bp":bp,
@@ -32,6 +35,7 @@ class PPModel{
       "otherExpends":otherExpends,
       "doctorsCharge":doctorsCharge,
       "dateTime":dateTime,
+      "medicineCharge":medicineCharge,
     };
   }
 
@@ -42,6 +46,8 @@ class PPModel{
     }
     return PPModel(
       id:map["id"],
+      incomeId:map["incomeId"],
+      medicineCharge:map["medicineCharge"],
       name:map["name"],
       age:map["age"],
       prescriptionList:_prescriptionList,

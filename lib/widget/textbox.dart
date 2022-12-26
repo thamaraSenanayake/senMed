@@ -18,7 +18,7 @@ class CustomTextBox extends StatefulWidget {
   final TextEditingController? textEditingController;
   final String errorText;
   final FocusNode? focusNode;
-  // final bool shadow;
+  final bool topPadding;
   final int? maxLength;
   final double width;
   final double height;
@@ -30,6 +30,7 @@ class CustomTextBox extends StatefulWidget {
     Key? key,
     this.onEditingComplete,
     this.enable = true,
+    this.topPadding = true,
     required this.onChange,
     this.borderColor,
     this.leftIcon,
@@ -75,7 +76,7 @@ class _TextBoxState extends State<CustomTextBox> {
   Widget build(BuildContext context) {
     
     return Padding(
-      padding: const EdgeInsets.only(top: 20),
+      padding:  EdgeInsets.only(top: widget.topPadding? 20:10),
       child: Container(
         width: widget.width,
         constraints:widget.textInputType == TextInputType.multiline? const BoxConstraints(

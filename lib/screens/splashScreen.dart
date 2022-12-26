@@ -3,6 +3,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
 
+import '../const.dart';
+import '../providers/base_provider.dart';
 import '../providers/firebase_provider.dart';
 import '../res.dart';
 import '../widget/loader.dart';
@@ -21,6 +23,9 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_){
+      Provider.of<BaseProvider>(context,listen: false).setLoadingState(true);
+    });
   }
 
   @override
@@ -81,7 +86,7 @@ class _SplashScreenState extends State<SplashScreen> {
               ),
               
               
-              const Loader(loading: true),
+              Loader(),
             ],
           ),
         );
