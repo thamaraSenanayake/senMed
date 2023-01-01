@@ -3,7 +3,8 @@ import 'package:balance/screens/Channeling/channlingDetails.dart';
 import 'package:balance/screens/ecg/ecgHistory.dart';
 import 'package:balance/screens/ecg/ecgScreen.dart';
 import 'package:balance/screens/otherExpends/extraItemList.dart';
-import 'package:balance/screens/privatePractice.dart';
+import 'package:balance/screens/pp/ppHistory.dart';
+import 'package:balance/screens/pp/privatePractice.dart';
 import 'package:balance/screens/settings.dart';
 import 'package:balance/screens/stock/stockScreen.dart';
 import 'package:balance/screens/vistiingDoctors/doctorScreen.dart';
@@ -86,6 +87,8 @@ class BasePage extends StatelessWidget {
                   const OtherExpendsList():
                   currentPage == Pages.ECGHistory?
                   const ECGHistory():
+                  currentPage == Pages.PrivatePracticeHistory?
+                  const PPHistory():
                   
                   
                   Container(),
@@ -117,6 +120,9 @@ class BasePage extends StatelessWidget {
                   if(currentPage == Pages.ECG){
                     Provider.of<BaseProvider>(context,listen: false).setProfilePage(Pages.ECGHistory);
                   }
+                  else if(currentPage == Pages.PrivatePractice){
+                    Provider.of<BaseProvider>(context,listen: false).setProfilePage(Pages.PrivatePracticeHistory);
+                  }
                 },
               ),
             ),
@@ -144,6 +150,9 @@ class BasePage extends StatelessWidget {
     }
     else if(currentPage == Pages.ECGHistory){
       return "ECG History";
+    }
+    else if(currentPage == Pages.PrivatePracticeHistory){
+      return "PP History";
     }
     else if(currentPage == Pages.Stock){
       return "Stock";

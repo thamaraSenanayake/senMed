@@ -1,9 +1,12 @@
 import 'package:balance/model/prescription.dart';
+import 'package:balance/model/stockModel.dart';
+import 'package:balance/providers/firebase_provider.dart';
 import 'package:balance/res.dart';
 import 'package:balance/widget/dropDown.dart';
 import 'package:balance/widget/textbox.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
+import 'package:provider/provider.dart';
 
 import '../const.dart';
 
@@ -11,7 +14,9 @@ class PrescriptionWidget extends StatefulWidget {
   final Prescription prescription;
   final bool addDisplay;
   final Function addNew;
-  const PrescriptionWidget({Key? key, required this.prescription, required this.addDisplay, required this.addNew})
+  final Function onChange;
+  final List<String> medicineList;
+  const PrescriptionWidget({Key? key, required this.prescription, required this.addDisplay, required this.addNew, required this.medicineList, required this.onChange})
       : super(key: key);
 
   @override
@@ -67,16 +72,34 @@ class _PrescriptionWidgetState extends State<PrescriptionWidget> {
                     ),
                   ),
                   onChanged: (value) {
+                    widget.prescription.name = value;
                     if (_nameError.isNotEmpty) {
                       setState(() {
                         _nameError = "";
                       });
                     }
+                    widget.onChange();
                   },
                   onSubmitted: (value) {},
                 ),
                 suggestionsCallback: (pattern) async {
-                  return [];
+                  if(pattern.isEmpty){
+                    return [];
+                  }
+                  List<String> _stringList = []; 
+                 
+                  for (var element in widget.medicineList) {
+                    if(element.startsWith(pattern.toLowerCase())){
+                      _stringList.add(element);
+                    }
+                  }
+                  for (var element in widget.medicineList) {
+                    if((!_stringList.contains(element)) && element.contains(pattern.toLowerCase())){
+                      _stringList.add(element);
+                    }
+                  }
+                  
+                  return _stringList;
                 },
                 itemBuilder: (context, suggestion) {
                   return ListTile(
@@ -84,7 +107,9 @@ class _PrescriptionWidgetState extends State<PrescriptionWidget> {
                   );
                 },
                 onSuggestionSelected: (suggestion) {
+                  widget.prescription.name = suggestion.toString();
                   _nameController.text = suggestion.toString();
+                  widget.onChange();
                 },
               ),
             ),
@@ -97,7 +122,10 @@ class _PrescriptionWidgetState extends State<PrescriptionWidget> {
                 width: (size.width-120)/2,
                 value: widget.prescription.does,
                 valueList: AppData.dose,
-                onChange: (val) {},
+                onChange: (val) {
+                  widget.prescription.does =val;
+                  widget.onChange();
+                },
               ),
 
               CustomTextBox(
@@ -109,6 +137,7 @@ class _PrescriptionWidgetState extends State<PrescriptionWidget> {
                         _daysError = "";
                       });
                     }
+                    widget.onChange();
                   }
                 },
                 textBoxHint: "Days",

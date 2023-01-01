@@ -3,7 +3,7 @@ import 'package:balance/res.dart';
 import 'package:uuid/uuid.dart';
 
 class PPModel{
-  String id;
+  String? id;
   String? incomeId;
   String name;
   String age;
@@ -15,7 +15,7 @@ class PPModel{
   int medicineCharge;
   DateTime dateTime;
 
-  PPModel({this.incomeId, required this.medicineCharge,required this.bp,required this.dressing, required this.otherExpends, required this.doctorsCharge, required this.id, required this.dateTime,required this.name, required this.age, required this.prescriptionList});
+  PPModel({this.incomeId, required this.medicineCharge,required this.bp,required this.dressing, required this.otherExpends, required this.doctorsCharge,  this.id, required this.dateTime,required this.name, required this.age, required this.prescriptionList});
 
 
   Map<String, dynamic> toMap() {

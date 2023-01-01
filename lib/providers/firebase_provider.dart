@@ -1,7 +1,9 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'package:balance/const.dart';
 import 'package:balance/model/channelingModel.dart';
+import 'package:balance/model/doctorModel.dart';
 import 'package:balance/model/ecgModel.dart';
 import 'package:balance/model/incomeModel.dart';
 import 'package:balance/model/ppModel.dart';
@@ -9,6 +11,7 @@ import 'package:balance/model/stockModel.dart';
 import 'package:balance/screens/basePage.dart';
 import 'package:balance/screens/homScreen.dart';
 import 'package:balance/screens/login.dart';
+import 'package:balance/screens/vistiingDoctors/addDoctor.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
@@ -17,6 +20,7 @@ import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:get/get.dart';
 import 'package:uuid/uuid.dart';
 import '../model/patientModel.dart';
+import '../model/prescription.dart';
 import '../res/platform_dialogue.dart';
 // import 'base_provider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -34,6 +38,7 @@ class FirebaseProvider  extends BaseProvider {
   final CollectionReference ecgReference =  FirebaseFirestore.instance.collection('ecg');
   final CollectionReference ppReference =  FirebaseFirestore.instance.collection('pp');
   final CollectionReference channelingReference =  FirebaseFirestore.instance.collection('channeling');
+  final CollectionReference visitingDoctorReference =  FirebaseFirestore.instance.collection('visitingDoctor');
   final CollectionReference stockReference =  FirebaseFirestore.instance.collection('stock');
   final CollectionReference incomeReference =  FirebaseFirestore.instance.collection('income');
 
@@ -157,6 +162,20 @@ class FirebaseProvider  extends BaseProvider {
     return true;
   }
 
+  Future<bool> addVisitingDoctors(
+    DoctorModel doctorModel
+  ) async {
+    doctorModel.id =  Uuid().v4();
+    try{
+      await visitingDoctorReference.doc(doctorModel.id ).set(
+        doctorModel.toMap(),
+      );
+    }catch(ex){
+      return false;
+    }
+    return true;
+  }
+
   Future<bool> addPPData(
     PPModel ppModel
   ) async {
@@ -165,10 +184,27 @@ class FirebaseProvider  extends BaseProvider {
     await ppReference.doc(ppModel.id ).set(
       ppModel.toMap(),
     );
+    await reduceQtyFromStockInPP(ppModel.prescriptionList);
     double cost =  (ppModel.dressing + ppModel.doctorsCharge+ppModel.medicineCharge+ppModel.otherExpends)/1;
     await setIncome(true,cost, IncomeType.pp, ppModel.incomeId!);
     return true;
   }
+
+  reduceQtyFromStockInPP(List<Prescription> prescriptionList) async{
+    for (var element in prescriptionList) {
+      StockModel? model = await getStockItem(element.name);
+      if(model != null){
+        
+        int _multipleBy = AppData.getDoseMultiply(element.does);
+        
+
+        model.qty -=  (_multipleBy*element.days);
+        await updateStockData(model);
+      }
+
+    }  
+  }
+
   Future<bool> addChannelData(
     ChannelingModel channelingModel
   ) async {
@@ -185,7 +221,7 @@ class FirebaseProvider  extends BaseProvider {
   ) async {
     stockModel.id =  Uuid().v4();
     
-    await ecgReference.doc(stockModel.id ).set(
+    await stockReference.doc(stockModel.id ).set(
       stockModel.toMap(),
     );
     
@@ -210,7 +246,7 @@ class FirebaseProvider  extends BaseProvider {
     StockModel stockModel
   ) async {
     
-    await ecgReference.doc(stockModel.id ).update(
+    await stockReference.doc(stockModel.id ).update(
       stockModel.toMap(),
     );
     
@@ -261,24 +297,53 @@ class FirebaseProvider  extends BaseProvider {
     return _ecgList;
   }
 
+  Future<List<PPModel>> getPPList() async {
+    QuerySnapshot querySnapshot = await ppReference.get();
+    List<PPModel> _ppList = [];
+    for (var item in querySnapshot.docs) {
+        _ppList.add(
+          PPModel.fromMap(item.data() as Map<String, dynamic>)
+        );
+    }
+    _ppList.sort((a, b) => a.dateTime.compareTo(b.dateTime));
+    return _ppList;
+  }
+
   Future<List<StockModel>> getStockList(String stockType,String search) async {
     late QuerySnapshot querySnapshot;
     if(stockType.isNotEmpty && search.isNotEmpty){
-      querySnapshot = await ecgReference.where("stockType",isEqualTo: stockType).where("searchList",arrayContains: search).get();
+      querySnapshot = await stockReference.where("searchList",arrayContains: search).get();
     }
-    else if(stockType.isNotEmpty ){
-      querySnapshot = await ecgReference.where("stockType",isEqualTo: stockType).get();
+    else if(stockType.isNotEmpty && stockType != AppData.stockList[0]){
+      querySnapshot = await stockReference.where("stockType",isEqualTo: stockType).get();
     }
     else if(search.isNotEmpty){
-      querySnapshot = await ecgReference.where("searchList",arrayContains: search).get();
+      querySnapshot = await stockReference.where("searchList",arrayContains: search).get();
+    }else{
+      querySnapshot = await stockReference.get();
+
     }
     List<StockModel> _ecgList = [];
     for (var item in querySnapshot.docs) {
         _ecgList.add(
-          StockModel.fromMap(item as Map<String, dynamic>)
+          StockModel.fromMap(item.data() as Map<String, dynamic>)
         );
     }
     return _ecgList;
+  }
+
+  Future<StockModel?> getStockItem(String name) async {
+    late QuerySnapshot querySnapshot;
+    querySnapshot = await stockReference.where("name",isEqualTo: name).get();
+    
+    StockModel? _stockItem;
+
+    for (var item in querySnapshot.docs) {
+        _stockItem = (
+          StockModel.fromMap(item.data() as Map<String, dynamic>)
+        );
+    }
+    return _stockItem;
   }
 
   

@@ -1,17 +1,25 @@
 import 'package:animations/animations.dart';
 import 'package:balance/model/ecgModel.dart';
+import 'package:balance/model/stockModel.dart';
 import 'package:balance/res.dart';
 import 'package:balance/screens/stock/addStock.dart';
 import 'package:balance/widget/button.dart';
 import 'package:balance/widget/header.dart';
+import 'package:balance/widget/loader.dart';
 import 'package:balance/widget/textbox.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 
 import '../../const.dart';
+import '../../providers/base_provider.dart';
+import '../../providers/firebase_provider.dart';
 import '../../widget/dropDown.dart';
+import '../../widget/stockWidget.dart';
 
 class StockScreen extends StatefulWidget {
   const StockScreen({Key? key}) : super(key: key);
@@ -22,14 +30,47 @@ class StockScreen extends StatefulWidget {
 
 class _StockScreenState extends State<StockScreen> {
   late String _selectedStockItem;
+  List<StockModel> _stockList = [];
+  List<StockModel> _allStockList = [];
+  String _search= "";
+
   @override
   void initState() {
     super.initState();
     _selectedStockItem = AppData.stockList[0];
-    _initSate();
+    WidgetsBinding.instance.addPostFrameCallback((_){
+      _initSate();
+    });
   }
 
-  _initSate() async {}
+  _initSate() async {
+    Provider.of<BaseProvider>(context,listen: false).setLoadingState(true);
+    _allStockList = await Provider.of<FirebaseProvider>(context,listen: false).getStockList(_selectedStockItem,""); 
+    
+    Provider.of<BaseProvider>(context,listen: false).setLoadingState(false);
+    setState(() {
+      _stockList = _allStockList;
+    });
+  }
+
+  _sortList(){
+    List<StockModel> _stockListTemp = [];
+    _stockListTemp.addAll(_allStockList);
+    if(_selectedStockItem == AppData.stockList[1]){
+      _stockListTemp.removeWhere((element) => element.stockType == AppData.stockList[2]);
+    }
+    else if(_selectedStockItem == AppData.stockList[2]){
+      _stockListTemp.removeWhere((element) => element.stockType == AppData.stockList[1]);
+    }
+
+    if(_search.isNotEmpty){
+      _stockListTemp.removeWhere((element) => !element.name.contains(_search));
+    }
+    setState(() {
+      _stockList = _stockListTemp;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     Size _size = MediaQuery.of(context).size;
@@ -66,12 +107,14 @@ class _StockScreenState extends State<StockScreen> {
                       valueList: AppData.stockList, 
                       onChange: (String val) {  
                         _selectedStockItem = val;
+                        _sortList();
                       },
 
                     ),
                     CustomTextBox(
                       onChange: (val){
-                        
+                        _search = val;
+                        _sortList();
                       }, 
                       errorText: "",
                       width: _size.width-40,
@@ -87,97 +130,15 @@ class _StockScreenState extends State<StockScreen> {
                           context: context, 
                           removeTop: true,
                           removeBottom: true,
-                          child: ListView(
-                            children: [
-                              Container(
-                                padding: const EdgeInsets.all(15),
-                                decoration: const BoxDecoration(
-                                  color: Colors.white,
-                                  boxShadow:  [
-                                    BoxShadow(color: Color.fromRGBO(0, 0, 0, 0.15)),
-                                    BoxShadow(
-                                      color: Color.fromRGBO(0, 0, 0, 0.15),
-                                      blurRadius: 11.0,
-                                      spreadRadius: 0.0,
-                                      offset: Offset(
-                                        0.0,
-                                        3.0,
-                                      ),
-                                    )
-                                  ],
-                                ),
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: [
-                                    Expanded(
-                                      child: Column(
-                                        children: [
-                                          Row(
-                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              Text(
-                                                "Name",
-                                                style: GoogleFonts.poppins(
-                                                  color: Colors.black,
-                                                  fontWeight: FontWeight.w700,
-                                                  fontSize: 15,
-                                                ),
-                                              ),
-                                              Text(
-                                                "Qty:",
-                                                style: GoogleFonts.poppins(
-                                                  color: Colors.black,
-                                                  fontWeight: FontWeight.w500,
-                                                  fontSize: 14,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                          Padding(
-                                            padding: const EdgeInsets.only(top: 10),
-                                            child: Row(
-                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                              children: [
-                                                Text(
-                                                  "Type",
-                                                  style: GoogleFonts.poppins(
-                                                    color: Colors.black,
-                                                    fontWeight: FontWeight.w500,
-                                                    fontSize: 14,
-                                                  ),
-                                                ),
-                                                
-                                              ],
-                                            ),
-                                          )
-                                        ]
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.only(left: 20),
-                                      child: Column(
-                                        children: [
-                                          Text(
-                                            "10",
-                                            style: GoogleFonts.poppins(
-                                              color: AppColors.thirdColor,
-                                              fontWeight: FontWeight.w500,
-                                              fontSize: 25,
-                                              height: 1.2
-                                            ),
-                                          ),
-                                          Icon(
-                                            Icons.edit_outlined,
-                                            color: AppColors.secondColor,
-                                          )
-                                        ],
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              )
-                            ],
+                          child: ListView.builder(
+                            itemCount: _stockList.length,
+                            itemBuilder: (BuildContext context, int index) => StockWidget(
+                              stock: _stockList[index],
+                              edit: () async {
+                                await Get.to( AddStock(stockModel: _stockList[index]));
+                                _initSate();
+                              },
+                            )
                           )
                         ),
                       ),
@@ -200,7 +161,7 @@ class _StockScreenState extends State<StockScreen> {
                 transitionDuration:const Duration(milliseconds: 500),
                 transitionType: ContainerTransitionType.fade,
                 openBuilder: (BuildContext context, VoidCallback _) {
-                  return  AddStock(
+                   return   AddStock(
                     // itemType: widget.itemType,
                   );
                 },
@@ -210,6 +171,9 @@ class _StockScreenState extends State<StockScreen> {
                     Radius.circular(100),
                   ),
                 ),
+                onClosed: (val){
+                  _initSate();
+                },
                 closedColor:  AppColors.mainColor,
                 closedBuilder: (BuildContext context, VoidCallback openContainer) {
                   return Container(
@@ -242,7 +206,9 @@ class _StockScreenState extends State<StockScreen> {
               ),
             )
           ),
-        )
+        ),
+
+        Loader(),
       ],
     );
   }

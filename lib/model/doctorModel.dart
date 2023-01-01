@@ -1,14 +1,14 @@
 import 'package:uuid/uuid.dart';
 
 class DoctorModel{
-  String id;
+  String? id;
   String doctorName;
   String hospital;
   String contactNumber;
   String specialty;
   double doctorsCharge;
 
-  DoctorModel({required this.hospital, required this.id, required this.doctorsCharge,required this.doctorName, required this.contactNumber, required this.specialty,});
+  DoctorModel({required this.hospital,  this.id, required this.doctorsCharge,required this.doctorName, required this.contactNumber, required this.specialty,});
 
 
   Map<String, dynamic> toMap() {

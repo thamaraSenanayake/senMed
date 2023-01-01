@@ -1,10 +1,15 @@
+import 'package:balance/model/doctorModel.dart';
 import 'package:balance/widget/dropDown.dart';
+import 'package:balance/widget/loader.dart';
 import 'package:balance/widget/textbox.dart';
 import 'package:balance/const.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
+import '../../providers/base_provider.dart';
+import '../../providers/firebase_provider.dart';
 import '../../res.dart';
 import '../../widget/button.dart';
 import '../../widget/header.dart';
@@ -40,6 +45,48 @@ class _VisitingDoctorsState extends State<AddVisitingDoctors> {
   void initState() {
     super.initState();
     
+  }
+
+  _done() async {
+    bool _validation = true;
+    if(_doctorName.isEmpty){
+      setState(() {
+        _doctorNameError = "Required Field";
+      });
+      _validation= false;
+    }
+    if(_hospital.isEmpty){
+      setState(() {
+        _hospitalError = "Required Field";
+      });
+      _validation= false;
+    }
+    if(_contactNumber.isEmpty){
+      setState(() {
+        _contactNumberError = "Required Field";
+      });
+      _validation= false;
+    }
+    if(_specialty.isEmpty){
+      setState(() {
+        _specialtyError = "Required Field";
+      });
+      _validation= false;
+    }
+    if(_doctorsCharge == 0){
+      setState(() {
+        _doctorsChargeError = "Required Field";
+      });
+      _validation= false;
+    }
+
+    if(_validation){
+      Provider.of<BaseProvider>(context,listen: false).setLoadingState(true);
+      if( await Provider.of<FirebaseProvider>(context,listen: false).addVisitingDoctors(DoctorModel(hospital: _hospital, doctorsCharge: _doctorsCharge, doctorName: _doctorName, contactNumber: _contactNumber, specialty: _specialty))){
+        Get.back();
+      }
+      Provider.of<BaseProvider>(context,listen: false).setLoadingState(false);
+    }
   }
 
   @override
@@ -91,6 +138,24 @@ class _VisitingDoctorsState extends State<AddVisitingDoctors> {
                             errorText: _doctorNameError,
                             width: _size.width - 40,
                             textBoxHint: "Doctor Name",
+                            onSubmit: (val) {
+                              _specialtyFocus.requestFocus();
+                            },
+                          ),
+
+                          CustomTextBox(
+                            focusNode: _specialtyFocus,
+                            onChange: (val) {
+                              _specialty = val;
+                              if (_specialtyError.isNotEmpty) {
+                                setState(() {
+                                  _specialtyError = "";
+                                });
+                              }
+                            },
+                            errorText: _specialtyError,
+                            width: _size.width - 40,
+                            textBoxHint: "Specialty",
                             onSubmit: (val) {
                               _doctorsChargeFocus.requestFocus();
                             },
@@ -173,7 +238,7 @@ class _VisitingDoctorsState extends State<AddVisitingDoctors> {
 
                           Padding(
                             padding: const EdgeInsets.only(top: 30),
-                            child: CustomButton(title: "Done", onPress: () {}),
+                            child: CustomButton(title: "Done", onPress: () {_done();}),
                           )
                         ],
                       ),
@@ -192,7 +257,8 @@ class _VisitingDoctorsState extends State<AddVisitingDoctors> {
                 leftIcon:Icons.arrow_back,
                 
               ),
-          )
+          ),
+          Loader(),
         ],
       ),
     );

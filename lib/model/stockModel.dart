@@ -3,16 +3,15 @@ import 'dart:io';
 import 'package:balance/res.dart';
 
 class StockModel{
-  String id;
+  String? id;
   String name;
-  String stockType;
   List<String>? searchList;
-  DateTime expire;
+  String stockType;
   int qty;
+  int waringQtyLimit;
   double sellPrice;
-  double buyingPrice;
 
-  StockModel({this.searchList, required this.id,required this.stockType, required this.name, required this.expire, required this.qty, required this.sellPrice, required this.buyingPrice});
+  StockModel({this.searchList,  this.id,required this.waringQtyLimit, required this.stockType, required this.name, required this.qty, required this.sellPrice});
 
 
   Map<String, dynamic> toMap() {
@@ -28,10 +27,9 @@ class StockModel{
       "searchList":searchList,
       "name":name,
       "stockType":stockType,
-      "expire":expire,
       "qty":qty,
       "sellPrice":sellPrice,
-      "buyingPrice":buyingPrice,
+      "waringQtyLimit":waringQtyLimit,
     };
   }
 
@@ -41,10 +39,9 @@ class StockModel{
       id:map['id'],
       name:map['name'],
       stockType:map['stockType'],
-      expire: getFirebaseTime(map['expire'])!,
       qty:map['qty'],
       sellPrice:map['sellPrice'],
-      buyingPrice:map['buyingPrice'],
+      waringQtyLimit:map['waringQtyLimit'],
       
     );
   }
