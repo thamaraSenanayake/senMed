@@ -7,7 +7,8 @@ class CustomDropDown extends StatefulWidget {
   final Function(String) onChange;
   final double? width;
   final String? hint;
-  const CustomDropDown({Key? key,this.hint, this.width, required this.value, required this.valueList, required this.onChange}) : super(key: key);
+  final String errorText;
+  const CustomDropDown({Key? key,this.errorText="", this.hint, this.width, required this.value, required this.valueList, required this.onChange}) : super(key: key);
 
     @override
   State<CustomDropDown> createState() => _CustomDropDownState();
@@ -46,6 +47,12 @@ class _CustomDropDownState extends State<CustomDropDown> {
             ),
           )
         ],
+         border: Border.all(
+          color: widget.errorText.isEmpty?
+                  (Colors.transparent):
+                  Colors.redAccent,
+          width:(1)
+        ),
       ),
       child:DropdownButtonHideUnderline(
         child: DropdownButton<String>(

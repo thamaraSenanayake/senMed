@@ -1,3 +1,4 @@
+import 'package:balance/model/extraItem.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -5,7 +6,8 @@ import '../res.dart';
 
 class ExtraItemWidget extends StatelessWidget {
   final Function onClick;
-  const ExtraItemWidget({Key? key, required this.onClick}) : super(key: key);
+  final ExtraItemModel extraItemModel;
+  const ExtraItemWidget({Key? key, required this.onClick, required this.extraItemModel}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +41,7 @@ class ExtraItemWidget extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "Scan",
+                    extraItemModel.extraItemName,
                     style: GoogleFonts.poppins(
                       color: Colors.black,
                       fontWeight: FontWeight.w700,
@@ -53,7 +55,7 @@ class ExtraItemWidget extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
                       Text(
-                        "LKR 2000.00",
+                        "LKR ${(extraItemModel.doctorsCharge+extraItemModel.centerCharge).toStringAsFixed(2)}",
                         style: GoogleFonts.poppins(
                           color: Colors.black,
                           fontWeight: FontWeight.w500,

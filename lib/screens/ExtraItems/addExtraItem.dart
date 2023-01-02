@@ -1,5 +1,7 @@
+import 'package:balance/model/extraItem.dart';
 import 'package:balance/widget/datePicker.dart';
 import 'package:balance/widget/dropDown.dart';
+import 'package:balance/widget/loader.dart';
 import 'package:balance/widget/textbox.dart';
 import 'package:balance/const.dart';
 import 'package:balance/widget/timePicker.dart';
@@ -8,12 +10,17 @@ import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
+import '../../model/ecgModel.dart';
+import '../../providers/base_provider.dart';
+import '../../providers/firebase_provider.dart';
 import '../../res.dart';
 import '../../widget/button.dart';
 import '../../widget/header.dart';
 
 class AddExtraItem extends StatefulWidget {
-  const AddExtraItem({Key? key}) : super(key: key);
+  final ExtraItemModel? extraItemModel;
+  const AddExtraItem({Key? key,  this.extraItemModel}) : super(key: key);
 
   @override
   State<AddExtraItem> createState() => _AddExtraItemState();
@@ -38,6 +45,36 @@ class _AddExtraItemState extends State<AddExtraItem> {
   @override
   void initState() {
     super.initState();
+  }
+
+  _done() async {
+    bool _validation = true;
+    if(_extraItem.isEmpty){
+      setState(() {
+        _extraItemError = "Required Field";
+      });
+      _validation = false;
+    }
+    if(_docCharge == 0){
+      setState(() {
+        _docChargeError = "Required Field";
+      });
+      _validation = false;
+    }
+    if( _centerCharge ==0){
+      setState(() {
+        _centerChargeError = "Required Field";
+      });
+      _validation = false;
+    }
+
+    if(_validation){
+      Provider.of<BaseProvider>(context,listen: false).setLoadingState(true);
+      if( await Provider.of<FirebaseProvider>(context,listen: false).addExtraItem(ExtraItemModel(centerCharge: _centerCharge, doctorsCharge: _docCharge, extraItemName: _extraItem))){
+        Get.back();
+      }
+      Provider.of<BaseProvider>(context,listen: false).setLoadingState(false);
+    }
   }
 
 
@@ -83,16 +120,16 @@ class _AddExtraItemState extends State<AddExtraItem> {
                                 _docChargeFocus.requestFocus();
                               },
                               focusNode: _extraItemFocus,
-                              topPadding: false,
-                              onEditingComplete: (){
-                                
-                               
-                              },
                               onChange: (val){
-                                
+                                _extraItem = val;
+                                if(_extraItemError.isNotEmpty){
+                                  setState(() {
+                                    _extraItemError = "";
+                                  });
+                                }
                               }, 
-                              textBoxHint: "Doctors Charge",
-                              errorText: _docChargeError, 
+                              textBoxHint: "Extra Item Name",
+                              errorText: _extraItemError, 
                               width: _size.width-40
                             ),
                             CustomTextBox(
@@ -112,7 +149,6 @@ class _AddExtraItemState extends State<AddExtraItem> {
                                   ),
                                 ),
                               ),
-                              topPadding: false,
                               textEditingController: _docChargeController,
                               onEditingComplete: (){
                                 
@@ -149,7 +185,6 @@ class _AddExtraItemState extends State<AddExtraItem> {
                                   ),
                                 ),
                               ),
-                              topPadding: false,
                               textEditingController: _centerChargeController,
                               onEditingComplete: (){
                                 
@@ -176,7 +211,7 @@ class _AddExtraItemState extends State<AddExtraItem> {
                             Padding(
                               padding: const EdgeInsets.only(top: 30),
                               child:
-                                  CustomButton(title: "Done", onPress: () {}),
+                                  CustomButton(title: "Done", onPress: () {_done();}),
                             )
                           ],
                         ),
@@ -195,7 +230,8 @@ class _AddExtraItemState extends State<AddExtraItem> {
               },
               leftIcon: Icons.arrow_back,
             ),
-          )
+          ),
+          Loader(),
         ],
       ),
     );

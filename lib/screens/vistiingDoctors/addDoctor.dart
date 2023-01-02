@@ -33,6 +33,7 @@ class _VisitingDoctorsState extends State<AddVisitingDoctors> {
   double _doctorsCharge =0.0;
   String _doctorsChargeError ="";
   
+  
   final FocusNode _doctorNameFocus = FocusNode();
   final FocusNode _hospitalFocus = FocusNode();
   final FocusNode _contactNumberFocus = FocusNode();
@@ -46,6 +47,8 @@ class _VisitingDoctorsState extends State<AddVisitingDoctors> {
     super.initState();
     
   }
+
+  
 
   _done() async {
     bool _validation = true;

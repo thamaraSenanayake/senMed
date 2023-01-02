@@ -1,3 +1,4 @@
+import 'package:balance/model/patientModel.dart';
 import 'package:balance/widget/channelPatient/otherCharges.dart';
 import 'package:balance/widget/dropDown.dart';
 import 'package:flutter/material.dart';
@@ -6,7 +7,8 @@ import 'package:google_fonts/google_fonts.dart';
 import '../../res.dart';
 
 class ChannelPatient extends StatefulWidget {
-  ChannelPatient({Key? key}) : super(key: key);
+  final PatientModel patientModel;
+  const ChannelPatient({Key? key, required this.patientModel}) : super(key: key);
 
   @override
   State<ChannelPatient> createState() => _ChannelPatientState();
@@ -37,7 +39,7 @@ class _ChannelPatientState extends State<ChannelPatient> {
               Padding(
                 padding: const EdgeInsets.only(left: 10),
                 child: Text(
-                  "Mr. Nimal Perera",
+                  "Mr/Mrs ${widget.patientModel.name}",
                   style: GoogleFonts.poppins(
                     color: Colors.black,
                     fontWeight: FontWeight.w700,

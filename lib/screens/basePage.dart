@@ -97,7 +97,7 @@ class BasePage extends StatelessWidget {
             ),
             SafeArea(
               child: Header(
-                title: _setPageTitle(currentPage),
+                title: _setPageTitle(currentPage,context),
                 leftClick: (){
                   if(currentPage == Pages.HomePage){
                     _scaffoldKey.currentState!.openDrawer();
@@ -141,7 +141,7 @@ class BasePage extends StatelessWidget {
     
   }
 
-  String _setPageTitle(Pages currentPage){
+  String _setPageTitle(Pages currentPage,BuildContext context){
     if(currentPage == Pages.HomePage){
       return "Menu";
     }
@@ -164,7 +164,7 @@ class BasePage extends StatelessWidget {
       return "Channeling";
     }
     else if(currentPage == Pages.ChannelingDetails){
-      return "Doctors Name";
+      return Provider.of<BaseProvider>(context,listen: false).channelingModel!.doctorName;
     }
     else if(currentPage == Pages.Settings){
       return "Settings";

@@ -1,10 +1,12 @@
 import 'package:animations/animations.dart';
+import 'package:balance/model/channelingModel.dart';
 import 'package:balance/model/ecgModel.dart';
 import 'package:balance/res.dart';
 import 'package:balance/screens/stock/addStock.dart';
 import 'package:balance/widget/button.dart';
 import 'package:balance/widget/channelWidget.dart';
 import 'package:balance/widget/header.dart';
+import 'package:balance/widget/loader.dart';
 import 'package:balance/widget/textbox.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -14,6 +16,7 @@ import 'package:provider/provider.dart';
 
 import '../../const.dart';
 import '../../providers/base_provider.dart';
+import '../../providers/firebase_provider.dart';
 import 'addChanneling.dart';
 
 class ChannelingList extends StatefulWidget {
@@ -24,14 +27,28 @@ class ChannelingList extends StatefulWidget {
 }
 
 class _ChannelingListState extends State<ChannelingList> {
+  List<ChannelingModel> _channelingList = [];
+
   @override
   void initState() {
     super.initState();
 
-    _initSate();
+     WidgetsBinding.instance.addPostFrameCallback((_){
+      _loadData(); 
+    });
   }
 
-  _initSate() async {}
+  _loadData() async {
+    
+    Provider.of<BaseProvider>(context,listen: false).setLoadingState(true);
+    _channelingList = await Provider.of<FirebaseProvider>(context,listen: false).getChannelingList(); 
+   
+    Provider.of<BaseProvider>(context,listen: false).setLoadingState(false);
+    setState(() {
+      
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     Size _size = MediaQuery.of(context).size;
@@ -47,32 +64,35 @@ class _ChannelingListState extends State<ChannelingList> {
             color: Colors.white,
             height: _size.height,
             width: _size.width,
-            child: SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.all(20.0),
-                child: AnimationLimiter(
-                    child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: AnimationConfiguration.toStaggeredList(
-                    duration: const Duration(milliseconds: 375),
-                    childAnimationBuilder: (widget) => SlideAnimation(
-                      horizontalOffset: 50.0,
-                      child: FadeInAnimation(
-                        child: widget,
+            padding: EdgeInsets.all(20),
+            child:MediaQuery.removePadding(
+              context: context,
+              removeTop: true,
+              removeBottom: true,
+              child: AnimationLimiter(
+                child: ListView.builder(
+                  itemCount: _channelingList.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return AnimationConfiguration.staggeredList(
+                      position: index,
+                      duration: const Duration(milliseconds: 375),
+                      child: SlideAnimation(
+                        verticalOffset: 50.0,
+                        child: FadeInAnimation(
+                          child: ChannelWidget(
+                            model: _channelingList[index],
+                            onClick: (){
+                              Provider.of<BaseProvider>(context,listen: false).setProfilePage(Pages.ChannelingDetails,channelingModel:_channelingList[index] );
+                            },
+                          ),
+                        ),
                       ),
-                    ),
-                    children: [
-                      ChannelWidget(
-                        onClick: (){
-                           Provider.of<BaseProvider>(context,listen: false).setProfilePage(Pages.ChannelingDetails);
-                        },
-                      ),
-                    ],
-                  ),
-                )),
+                    );
+                  },
+                ),
               ),
             ),
+            
           ),
         ),
 
@@ -128,6 +148,8 @@ class _ChannelingListState extends State<ChannelingList> {
             )
           ),
         ),
+
+        Loader()
       ],
     );
   }

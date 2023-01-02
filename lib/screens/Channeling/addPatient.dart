@@ -11,59 +11,50 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:uuid/uuid.dart';
 import '../../model/doctorModel.dart';
+import '../../model/patientModel.dart';
 import '../../providers/base_provider.dart';
 import '../../providers/firebase_provider.dart';
 import '../../res.dart';
 import '../../widget/button.dart';
 import '../../widget/header.dart';
 
-class AddChanneling extends StatefulWidget {
-  const AddChanneling({Key? key}) : super(key: key);
+class AddPatient extends StatefulWidget {
+  final List<PatientModel> patientList;
+  final String channelingId; 
+  const AddPatient({Key? key, required this.patientList, required this.channelingId}) : super(key: key);
 
   @override
-  State<AddChanneling> createState() => _AddChannelingState();
+  State<AddPatient> createState() => _AddPatientState();
 }
 
-class _AddChannelingState extends State<AddChanneling> {
-  String? _docName;
-  String _doctorNameError="";
-  String _docType = "";
-  double _docChrage = 0;
-  late DateTime _dateTime;
-  late TimeOfDay _timeOfDay;
-  List<String> _doctorNameList = [];
-  List<DoctorModel> _doctorList = [];
-
-  @override
-  void initState() {
-    _dateTime = DateTime.now();
-    _timeOfDay = TimeOfDay.now();
-    WidgetsBinding.instance.addPostFrameCallback((_){
-      _loadDoctors();
-    });
-    
-  }
-
-  _loadDoctors() async {
-    Provider.of<BaseProvider>(context,listen: false).setLoadingState(true);
-    _doctorList = await Provider.of<FirebaseProvider>(context,listen: false).getVisitingDoctorList();
-    for (var element in _doctorList) {
-      _doctorNameList.add(element.doctorName);
-    }
-    Provider.of<BaseProvider>(context,listen: false).setLoadingState(false);
-  }
+class _AddPatientState extends State<AddPatient> {
+  String _patientName = "";
+  String _patientNameError= "";
+  String _contactNum = "";
+  String _contactNumError= "";
 
   _done() async {
-    if(_docName == null){
+    bool _validation = true; 
+    if(_patientName.isEmpty){
       setState(() {
-        _doctorNameError = "Required Field";
+        _patientNameError = "Required Field";
       });
-    }else {
+      _validation = false;
+    }
+    else if(_contactNum.isEmpty){
+      setState(() {
+        _contactNumError = "Required Field";
+      });
+      _validation = false;
+    }
+    if(_validation){
       Provider.of<BaseProvider>(context,listen: false).setLoadingState(true);
-      DoctorModel _doctor = _doctorList.firstWhere((element) => element.doctorName == _docName);
-      if(await Provider.of<FirebaseProvider>(context,listen: false).addChannelData(ChannelingModel(isOnGoing: true, dateTime: _dateTime, doctorPayment: _doctor.doctorsCharge, hospital: _doctor.hospital, specialty: _doctor.specialty, patientList: [], doctorName: _doctor.doctorName, telephone: _doctor.contactNumber))){
-        Get.back();
+      widget.patientList.add(PatientModel(isCanceled: false, isPaid: false, otherExpendsList: [], id: Uuid().v4(), name: _patientName, telephone: _contactNum));
+
+      if(await Provider.of<FirebaseProvider>(context,listen: false).addPatientChannelData(widget.patientList, widget.channelingId)){
+        Get.back(result:widget.patientList);
       }
       Provider.of<BaseProvider>(context,listen: false).setLoadingState(false);
     }
@@ -105,31 +96,31 @@ class _AddChannelingState extends State<AddChanneling> {
                             ),
                           ),
                           children: [
-                            CustomDropDown(
-                              errorText: _doctorNameError,
-                              hint: "Select Doctor",
-                              value: _docName,
-                              valueList: _doctorNameList,
-                              onChange: (val) {
-                                setState(() {
-                                  _docName = val;
-                                  _doctorNameError ="";
-                                });
-                              },
+                            CustomTextBox(
+                              onChange: (val){
+                                _patientName = val;
+                                if(_patientNameError.isEmpty){
+                                  setState(() {
+                                    _patientNameError = "";
+                                  });
+                                }
+                              }, 
+                              errorText: _patientNameError, 
+                              width: _size.width-40,
+                              textBoxHint: "Patient Name",
                             ),
-                            CustomDatePicker(
-                              dateTime: _dateTime, 
-                              setDateTime: (DateTime  dateTime) {
-                                _dateTime = dateTime;
-                              },
-                            ),
-                            CustomTimePicker(
-                              timeOfDay: _timeOfDay, 
-                              setTimeOfDay: (TimeOfDay timeOfDay){
-                                setState(() {
-                                  _timeOfDay = timeOfDay;
-                                });
-                              }
+                            CustomTextBox(
+                              onChange: (val){
+                                _contactNum = val;
+                                if(_contactNumError.isEmpty){
+                                  setState(() {
+                                    _contactNumError = "";
+                                  });
+                                }
+                              }, 
+                              errorText: _contactNumError, 
+                              width: _size.width-40,
+                              textBoxHint: "Patient Contact Num",
                             ),
                             Padding(
                               padding: const EdgeInsets.only(top: 30),

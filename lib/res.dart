@@ -92,7 +92,7 @@ Future<void> timePicker(BuildContext context, TimeOfDay _timeOfDay,Function(Time
           colorScheme: const ColorScheme.dark(
             primary: AppColors.secondColor,
             onPrimary: Colors.black,
-            surface: AppColors.mainColor,
+            surface: Colors.white,
             onSurface: AppColors.secondColor,
           ),
           dialogBackgroundColor: Colors.white,

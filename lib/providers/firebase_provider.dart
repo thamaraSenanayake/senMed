@@ -5,9 +5,11 @@ import 'package:balance/const.dart';
 import 'package:balance/model/channelingModel.dart';
 import 'package:balance/model/doctorModel.dart';
 import 'package:balance/model/ecgModel.dart';
+import 'package:balance/model/extraItem.dart';
 import 'package:balance/model/incomeModel.dart';
 import 'package:balance/model/ppModel.dart';
 import 'package:balance/model/stockModel.dart';
+import 'package:balance/screens/ExtraItems/addExtraItem.dart';
 import 'package:balance/screens/basePage.dart';
 import 'package:balance/screens/homScreen.dart';
 import 'package:balance/screens/login.dart';
@@ -36,6 +38,7 @@ class FirebaseProvider  extends BaseProvider {
   String? name;
   
   final CollectionReference ecgReference =  FirebaseFirestore.instance.collection('ecg');
+  final CollectionReference extraItemReference =  FirebaseFirestore.instance.collection('extraItem');
   final CollectionReference ppReference =  FirebaseFirestore.instance.collection('pp');
   final CollectionReference channelingReference =  FirebaseFirestore.instance.collection('channeling');
   final CollectionReference visitingDoctorReference =  FirebaseFirestore.instance.collection('visitingDoctor');
@@ -162,6 +165,20 @@ class FirebaseProvider  extends BaseProvider {
     return true;
   }
 
+  Future<bool> addExtraItem(
+    ExtraItemModel extraItem
+  ) async {
+    extraItem.id =  Uuid().v4();
+    try{
+      await extraItemReference.doc(extraItem.id ).set(
+        extraItem.toMap(),
+      );
+    }catch(ex){
+      return false;
+    }
+    return true;
+  }
+
   Future<bool> addVisitingDoctors(
     DoctorModel doctorModel
   ) async {
@@ -211,6 +228,22 @@ class FirebaseProvider  extends BaseProvider {
     channelingModel.id =  Uuid().v4();
     await channelingReference.doc(channelingModel.id ).set(
       channelingModel.toMap(),
+    );
+    
+    return true;
+  }
+
+  Future<bool> addPatientChannelData(
+    List<PatientModel> patientList, String channelingId
+  ) async {
+    List<Map<String,dynamic>> _listMap = [];
+
+    for (var element in patientList) {
+      _listMap.add(element.toMap());
+    }
+    
+    await channelingReference.doc(channelingId).update(
+      {"patientList":_listMap}
     );
     
     return true;
@@ -285,6 +318,18 @@ class FirebaseProvider  extends BaseProvider {
 
 
   //get
+  Future<List<ChannelingModel>> getChannelingList() async {
+    QuerySnapshot querySnapshot = await channelingReference.get();
+    List<ChannelingModel> _channelingList = [];
+    for (var item in querySnapshot.docs) {
+        _channelingList.add(
+          ChannelingModel.fromMap(item.data() as Map<String, dynamic>)
+        );
+    }
+    _channelingList.sort((a, b) => a.dateTime.compareTo(b.dateTime));
+    return _channelingList;
+  }
+
   Future<List<ECGModel>> getECGList() async {
     QuerySnapshot querySnapshot = await ecgReference.get();
     List<ECGModel> _ecgList = [];
@@ -295,6 +340,28 @@ class FirebaseProvider  extends BaseProvider {
     }
     _ecgList.sort((a, b) => a.dateTime.compareTo(b.dateTime));
     return _ecgList;
+  }
+
+  Future<List<ExtraItemModel>> getExtraFeatherList() async {
+    QuerySnapshot querySnapshot = await extraItemReference.get();
+    List<ExtraItemModel> _extraItemList = [];
+    for (var item in querySnapshot.docs) {
+        _extraItemList.add(
+          ExtraItemModel.fromMap(item.data() as Map<String, dynamic>)
+        );
+    }
+    return _extraItemList;
+  }
+
+  Future<List<DoctorModel>> getVisitingDoctorList() async {
+    QuerySnapshot querySnapshot = await visitingDoctorReference.get();
+    List<DoctorModel> _doctorList = [];
+    for (var item in querySnapshot.docs) {
+        _doctorList.add(
+          DoctorModel.fromMap(item.data() as Map<String, dynamic>)
+        );
+    }
+    return _doctorList;
   }
 
   Future<List<PPModel>> getPPList() async {

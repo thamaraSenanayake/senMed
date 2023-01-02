@@ -31,6 +31,7 @@ class CustomTimePickerState extends State<CustomTimePicker> {
             _timeOfDay,
             (TimeOfDay time){
               setState(() {
+                _timeOfDay = time;
                 widget.setTimeOfDay(time);
               });
             }

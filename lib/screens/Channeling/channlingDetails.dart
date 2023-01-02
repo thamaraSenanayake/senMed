@@ -1,6 +1,8 @@
 import 'package:animations/animations.dart';
 import 'package:balance/const.dart';
+import 'package:balance/model/channelingModel.dart';
 import 'package:balance/model/ecgModel.dart';
+import 'package:balance/model/patientModel.dart';
 import 'package:balance/res.dart';
 import 'package:balance/screens/stock/addStock.dart';
 import 'package:balance/widget/button.dart';
@@ -11,10 +13,13 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
+import '../../providers/base_provider.dart';
 import '../../widget/datePicker.dart';
 import '../../widget/timePicker.dart';
-import 'addChanneling.dart';
+import 'addPatient.dart';
 
 class ChannelingDetails extends StatefulWidget {
   const ChannelingDetails({Key? key}) : super(key: key);
@@ -24,7 +29,7 @@ class ChannelingDetails extends StatefulWidget {
 }
 
 class _ChannelingDetailsState extends State<ChannelingDetails> {
-
+  late ChannelingModel _channelingModel;
   bool _editTimeDisplay = false;
 
   @override
@@ -34,7 +39,9 @@ class _ChannelingDetailsState extends State<ChannelingDetails> {
     _initSate();
   }
 
-  _initSate() async {}
+  _initSate() async {
+    _channelingModel = Provider.of<BaseProvider>(context,listen: false).channelingModel!;
+  }
   @override
   Widget build(BuildContext context) {
     Size _size = MediaQuery.of(context).size;
@@ -81,7 +88,7 @@ class _ChannelingDetailsState extends State<ChannelingDetails> {
                           Row(
                             children: [
                               Text(
-                                "Jul 10 - 10.00 a.m",
+                                DateFormat('MMM d - h.mm a').format(_channelingModel.dateTime),
                                 style: GoogleFonts.poppins(
                                   color: AppColors.secondColor,
                                   fontWeight: FontWeight.w600,
@@ -211,7 +218,7 @@ class _ChannelingDetailsState extends State<ChannelingDetails> {
                                 ),
                               ),
                               Text(
-                                "VOG - Chilaw Hospital",
+                                "${_channelingModel.specialty} - ${_channelingModel.hospital} Hospital",
                                 style: GoogleFonts.poppins(
                                   color: Colors.black,
                                   fontSize: 14,
@@ -226,11 +233,34 @@ class _ChannelingDetailsState extends State<ChannelingDetails> {
                         height: 20,
                       ),
 
-                      Column(
-                        children: [
-                          ChannelPatient()
-                        ],
-                      )
+                      // Column(
+                      //   children: [
+                      //     ChannelPatient()
+                      //   ],
+                      // )
+                      MediaQuery.removePadding(
+                        context: context,
+                        removeTop: true,
+                        removeBottom: true,
+                        child: AnimationLimiter(
+                          child: ListView.builder(
+                            shrinkWrap: true,
+                            itemCount: _channelingModel.patientList.length,
+                            itemBuilder: (BuildContext context, int index) {
+                              return AnimationConfiguration.staggeredList(
+                                position: index,
+                                duration: const Duration(milliseconds: 375),
+                                child: SlideAnimation(
+                                  verticalOffset: 50.0,
+                                  child: FadeInAnimation(
+                                    child: ChannelPatient(patientModel:_channelingModel.patientList[index])
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+                      ),
 
 
 
@@ -240,6 +270,63 @@ class _ChannelingDetailsState extends State<ChannelingDetails> {
                 ),),
               ),
             ),
+          ),
+        ),
+
+        Align(
+          alignment: Alignment.bottomRight,
+          child: SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.only(right: 10),
+              child: OpenContainer(
+                transitionDuration:const Duration(milliseconds: 500),
+                transitionType: ContainerTransitionType.fade,
+                openBuilder: (BuildContext context, VoidCallback _) {
+                  return   AddPatient(
+                    channelingId: _channelingModel.id!, 
+                    patientList: _channelingModel.patientList,
+                  );
+                },
+                onClosed: ((data) {
+                  _channelingModel.patientList.add(data as PatientModel);
+                }),
+                closedElevation: 6.0,
+                closedShape: const  RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(100),
+                  ),
+                ),
+                closedColor:  AppColors.mainColor,
+                closedBuilder: (BuildContext context, VoidCallback openContainer) {
+                  return Container(
+                    height: 70,
+                    width: 70,
+                    decoration: const BoxDecoration(
+                      color: AppColors.mainColor,
+                      shape: BoxShape.circle,
+                      boxShadow:  [
+                        BoxShadow(color: Color.fromRGBO(0, 0, 0, 0.15)),
+                        BoxShadow(
+                          color: Color.fromRGBO(0, 0, 0, 0.15),
+                          blurRadius: 11.0,
+                          spreadRadius: 0.0,
+                          offset: Offset(
+                            0.0,
+                            3.0,
+                          ),
+                        )
+                      ],
+                    ),
+                    child: const Center(
+                      child: Icon(
+                        Icons.add,
+                        color: Colors.white,
+                      ),
+                    ),
+                  );
+                },
+              ),
+            )
           ),
         ),
       ],

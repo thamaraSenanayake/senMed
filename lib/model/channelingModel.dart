@@ -11,8 +11,9 @@ class ChannelingModel{
   double doctorPayment;
   DateTime dateTime;
   List<PatientModel> patientList;
+  bool isOnGoing;
 
-  ChannelingModel({required this.dateTime,required this.doctorPayment,required this.hospital,required this.specialty,required this.patientList,required this.id,required this.doctorName, required this.telephone});
+  ChannelingModel({required this.isOnGoing,required this.dateTime,required this.doctorPayment,required this.hospital,required this.specialty,required this.patientList, this.id,required this.doctorName, required this.telephone});
 
 
   Map<String, dynamic> toMap() {
@@ -42,6 +43,7 @@ class ChannelingModel{
     }
     return ChannelingModel(
       id:map["id"],
+      isOnGoing:map["isOnGoing"],
       doctorName:map["doctorName"],
       specialty:map['specialty'],
       hospital:map['hospital'],

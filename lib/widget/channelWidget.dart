@@ -1,14 +1,18 @@
+import 'package:balance/model/channelingModel.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 
 import '../res.dart';
 
 class ChannelWidget extends StatelessWidget {
+  final ChannelingModel model;
   final Function onClick;
-  const ChannelWidget({Key? key, required this.onClick}) : super(key: key);
+  const ChannelWidget({Key? key,required this.model, required this.onClick}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+
     return GestureDetector(
       onTap: (){
         onClick();
@@ -49,7 +53,7 @@ class ChannelWidget extends StatelessWidget {
                     ),
                     child: Center(
                       child: Text(
-                        "10",
+                        model.patientList.length.toString(),
                         style: GoogleFonts.poppins(
                           color: AppColors.thirdColor,
                           fontWeight: FontWeight.w800,
@@ -67,7 +71,7 @@ class ChannelWidget extends StatelessWidget {
                           CrossAxisAlignment.start,
                       children: [
                         Text(
-                          "Dr.Gayan De Silva",
+                          "Dr.${model.doctorName}",
                           style: GoogleFonts.poppins(
                             color: Colors.black,
                             fontWeight: FontWeight.w600,
@@ -79,7 +83,7 @@ class ChannelWidget extends StatelessWidget {
                           height: 5,
                         ),
                         Text(
-                          "(V.P) - Chilaw",
+                          "(${model.specialty}) - ${model.hospital}",
                           style: GoogleFonts.poppins(
                             color: Colors.black,
                             fontWeight: FontWeight.w500,
@@ -95,7 +99,7 @@ class ChannelWidget extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
                       Text(
-                        "Jul 10 - 10.00 a.m",
+                        DateFormat('MMM d - h.mm a').format(model.dateTime),
                         style: GoogleFonts.poppins(
                           color: AppColors.secondColor,
                           fontWeight: FontWeight.w400,
